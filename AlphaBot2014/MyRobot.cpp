@@ -10,7 +10,7 @@ class RobotDemo : public SimpleRobot
 {
 	RobotDrive myRobot; // robot drive system
 	Joystick stick; // only joystick
-
+	
 public:
 	RobotDemo():
 		myRobot(1, 2),	// these must be initialized in the same order
@@ -25,9 +25,9 @@ public:
 	void Autonomous()
 	{
 		myRobot.SetSafetyEnabled(false);
-		myRobot.Drive(-0.5, 0.0); 	// drive forwards half speed
+		myRobot.Drive(1.0, 1.0); 	// drive forwards half speed
 		Wait(2.0); 				//    for 2 seconds
-		myRobot.Drive(0.0, 0.0); 	// stop robot
+		myRobot.Drive(1.0, 1.0); 	// stop robot
 	}
 
 	/**
@@ -38,7 +38,9 @@ public:
 		myRobot.SetSafetyEnabled(true);
 		while (IsOperatorControl())
 		{
-			myRobot.ArcadeDrive(stick); // drive with arcade style (use right stick)
+			//myRobot.ArcadeDrive(stick); // drive with arcade style (use right stick)
+			myRobot.TankDrive(stick.GetRawAxis(2), stick.GetRawAxis(5));
+			
 			Wait(0.005);				// wait for a motor update time
 		}
 	}
