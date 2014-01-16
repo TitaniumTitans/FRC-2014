@@ -8,16 +8,23 @@
  */ 
 class RobotDemo : public SimpleRobot
 {
+	
+	
+	AnalogChannel range;
 	RobotDrive myRobot; // robot drive system
 	Joystick stick; // only joystick
 	
+	
 public:
 	RobotDemo():
+		
+		range(1),
 		myRobot(1, 2),	// these must be initialized in the same order
 		stick(1)		// as they are declared above.
 	{
 		myRobot.SetExpiration(0.1);
 	}
+		
 
 	/**
 	 * Drive left & right motors for 2 seconds then stop
@@ -35,12 +42,15 @@ public:
 	 */
 	void OperatorControl()
 	{
+		SmartDashboard::init();
 		myRobot.SetSafetyEnabled(true);
 		while (IsOperatorControl())
 		{
 			//myRobot.ArcadeDrive(stick); // drive with arcade style (use right stick)
 			myRobot.TankDrive(stick.GetRawAxis(2), stick.GetRawAxis(5));
+			float distance = getInch(range.GetAverageVoltage());
 			
+			SmartDashboard::PutNumber("distance", distance);
 			Wait(0.005);				// wait for a motor update time
 		}
 	}
@@ -50,6 +60,11 @@ public:
 	 */
 	void Test() {
 
+	}
+	
+	float getInch(float voltage){
+		float scale = 5./512.;
+		return voltage/scale;
 	}
 };
 
