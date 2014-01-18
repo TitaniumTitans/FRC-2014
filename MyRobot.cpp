@@ -10,7 +10,6 @@ class RobotDemo : public SimpleRobot
 	Joystick stick;
 	Relay light;
 	
-	
 public:
 	RobotDemo():
 		
@@ -20,13 +19,60 @@ public:
 		light(1)
 	{
 		myRobot.SetExpiration(0.1);
+		light.Set(light.kOn);
 	}
 
 	
 	void Autonomous()
 	{
 		myRobot.SetSafetyEnabled(false);
-
+		
+		Wait(0.25);
+		AxisCamera &camera = AxisCamera::GetInstance();
+				
+		while(IsAutonomous()){
+			light.Set(light.kOn);
+			Wait(0.2);
+		ColorImage *image;
+		image = camera.GetImage();
+		
+		//image->Write("Orig.bmp");
+		
+		Wait(0.2);
+		
+		BinaryImage *bimage = image->ThresholdRGB(0,50, 200, 255, 0, 255);
+		
+		//bimage->Write("/bimage.png");
+		Wait(0.2);
+		//light.Set(light.kOff);
+		
+		Wait(1);
+		
+		if(bimage->GetNumberParticles()<2){
+			//light.Set(light.kOff);
+		}
+		else{
+			light.Set(light.kOff);
+			//Wait(1000);
+			/*vector< ParticleAnalysisReport > * reports = bimage->GetOrderedParticleAnalysisReports(); 
+			for(int i = 0; i<2; i++){
+				Rect rect = reports->at(i).boundingRect;
+				
+				//vertical
+				if(rect.height>rect.width){
+					light.Set(light.kOff);
+				}
+				
+				//horizontal
+				else{
+					
+				}
+			}*/
+		}
+		}
+		
+		
+		
 	}
 
 
@@ -34,10 +80,13 @@ public:
 	{
 		SmartDashboard::init();
 		myRobot.SetSafetyEnabled(true);
+		
+		
+		
 		int n = 0;
 		float sum = 0;
 		bool buttonState = stick.GetRawButton(6);
-		bool lightState = 0;
+		bool lightState = false;
 		bool changed = false;
 		while(IsOperatorControl())
 		{
@@ -51,6 +100,7 @@ public:
 			}
 			
 			
+			
 			if(lightState) light.Set(light.kOn);
 			else light.Set(light.kOff);
 			
@@ -58,7 +108,7 @@ public:
 			
 			buttonState=state;
 
-			myRobot.TankDrive(stick.GetRawAxis(2), stick.GetRawAxis(5));
+			myRobot.TankDrive(-stick.GetRawAxis(5), -stick.GetRawAxis(2));
 			float distance = getInch(range.GetAverageVoltage());
 			sum+=distance;
 			if(n%100==0){
