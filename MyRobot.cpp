@@ -1,57 +1,72 @@
 #include "WPILib.h"
 
-/**
- * This is a demo program showing the use of the RobotBase class.
- * The SimpleRobot class is the base of a robot application that will automatically call your
- * Autonomous and OperatorControl methods at the right time as controlled by the switches on
- * the driver station or the field controls.
- */ 
+
 class RobotDemo : public SimpleRobot
 {
 	
 	
 	AnalogChannel range;
-	RobotDrive myRobot; // robot drive system
-	Joystick stick; // only joystick
+	RobotDrive myRobot;
+	Joystick stick;
+	Relay light;
 	
 	
 public:
 	RobotDemo():
 		
 		range(1),
-		myRobot(1, 2),	// these must be initialized in the same order
-		stick(1)		// as they are declared above.
+		myRobot(1, 2),	
+		stick(1),		
+		light(1)
 	{
 		myRobot.SetExpiration(0.1);
 	}
-		
 
-	/**
-	 * Drive left & right motors for 2 seconds then stop
-	 */
+	
 	void Autonomous()
 	{
 		myRobot.SetSafetyEnabled(false);
-		myRobot.Drive(1.0, 1.0); 	// drive forwards half speed
-		Wait(2.0); 				//    for 2 seconds
-		myRobot.Drive(1.0, 1.0); 	// stop robot
+
 	}
 
-	/**
-	 * Runs the motors with arcade steering. 
-	 */
+
 	void OperatorControl()
 	{
 		SmartDashboard::init();
 		myRobot.SetSafetyEnabled(true);
-		while (IsOperatorControl())
+		int n = 0;
+		float sum = 0;
+		bool buttonState = stick.GetRawButton(6);
+		bool lightState = 0;
+		bool changed = false;
+		while(IsOperatorControl())
 		{
-			//myRobot.ArcadeDrive(stick); // drive with arcade style (use right stick)
+			bool state = stick.GetRawButton(6);
+			
+			if(state!=buttonState){
+				if(state){
+					lightState = !lightState;
+					changed = true;
+				}
+			}
+			
+			
+			if(lightState) light.Set(light.kOn);
+			else light.Set(light.kOff);
+			
+			changed = false;
+			
+			buttonState=state;
+
 			myRobot.TankDrive(stick.GetRawAxis(2), stick.GetRawAxis(5));
 			float distance = getInch(range.GetAverageVoltage());
-			
-			SmartDashboard::PutNumber("distance", distance);
-			Wait(0.005);				// wait for a motor update time
+			sum+=distance;
+			if(n%100==0){
+				SmartDashboard::PutNumber("distance", sum/100.);
+				sum=0;
+			}
+			n++;
+			Wait(0.005);				
 		}
 	}
 	
