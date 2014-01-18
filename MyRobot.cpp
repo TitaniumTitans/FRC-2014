@@ -27,26 +27,26 @@ public:
 	{
 		myRobot.SetSafetyEnabled(false);
 		
-		Wait(0.25);
+		Wait(0.075);
 		AxisCamera &camera = AxisCamera::GetInstance();
 				
 		while(IsAutonomous()){
-			light.Set(light.kOn);
-			Wait(0.2);
+			
+			Wait(0.075);
 		ColorImage *image;
 		image = camera.GetImage();
 		
 		//image->Write("Orig.bmp");
+		light.Set(light.kOn);
 		
-		Wait(0.2);
-		
+		Wait(0.075);
 		BinaryImage *bimage = image->ThresholdRGB(0,50, 200, 255, 0, 255);
 		
 		//bimage->Write("/bimage.png");
-		Wait(0.2);
+		//Wait(0.2);
 		//light.Set(light.kOff);
 		
-		Wait(1);
+		Wait(0.075);
 		
 		if(bimage->GetNumberParticles()<2){
 			//light.Set(light.kOff);
