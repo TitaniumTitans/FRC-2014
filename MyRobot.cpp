@@ -1,5 +1,6 @@
 #include "WPILib.h"
 
+#define AREA_MINIMUM 50
 
 class RobotDemo : public SimpleRobot
 {
@@ -29,18 +30,32 @@ public:
 		
 		Wait(0.075);
 		AxisCamera &camera = AxisCamera::GetInstance();
+		Threshold threshold(115, 180, 230, 255, 225, 255);
+		/*ParticleFilterCriteria2 criteria[] = {
+						{IMAQ_MT_AREA, AREA_MINIMUM, 65535, false, false}
+		};*/
+		BinaryImage *bimage2;
+		
 				
-		while(IsAutonomous()){
+		while(IsAutonomous())
+		if(true){
 			
 			Wait(0.075);
 		ColorImage *image;
 		image = camera.GetImage();
+		//image->Write("/original.bmp");
 		
 		//image->Write("Orig.bmp");
 		light.Set(light.kOn);
 		
-		Wait(0.075);
-		BinaryImage *bimage = image->ThresholdRGB(0,50, 200, 255, 0, 255);
+		Wait(0.125);
+		//BinaryImage *bimage = image->ThresholdHSV(threshold);
+		BinaryImage *bimage2 = image->ThresholdRGB(0,50, 200, 255, 0, 255);
+		//bimage->Write("/bimage.bmp");
+		//bimage2->Write("/bimage2.bmp");
+		
+		//BinaryImage *filteredImage = bimage2->ParticleFilter(criteria, 1);
+		//filteredImage->Write("/filtered.bmp");
 		
 		//bimage->Write("/bimage.png");
 		//Wait(0.2);
@@ -48,8 +63,8 @@ public:
 		
 		Wait(0.075);
 		
-		if(bimage->GetNumberParticles()<2){
-			//light.Set(light.kOff);
+		if(bimage2->GetNumberParticles()<2){
+			//light.Set(light.kOn);
 		}
 		else{
 			light.Set(light.kOff);
