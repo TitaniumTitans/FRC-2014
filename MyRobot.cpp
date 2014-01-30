@@ -1,4 +1,5 @@
 #include "WPILib.h"
+#include "Feeder.h"
 
 #define AREA_MINIMUM 50
 
@@ -7,17 +8,27 @@ class RobotDemo : public SimpleRobot
 	
 	
 	AnalogChannel range;
+	AnalogChannel feederAngle;
 	RobotDrive myRobot;
-	Joystick stick;
+	Joystick stick1;
+	Joystick stick2;
 	Relay light;
+	DigitalInput limitSwitch; 
+	Victor feederArm;
+	Victor feederWheel;
 	
 public:
 	RobotDemo():
 		
 		range(1),
+		feederAngle(2),
 		myRobot(1, 2),	
-		stick(1),		
-		light(1)
+		stick1(1),
+		stick2(2), 
+		light(1),
+		limitSwitch(1),
+		feederArm(6),
+		feederWheel(8)
 	{
 		myRobot.SetExpiration(0.1);
 		light.Set(light.kOn);
@@ -34,10 +45,10 @@ public:
 		/*ParticleFilterCriteria2 criteria[] = {
 						{IMAQ_MT_AREA, AREA_MINIMUM, 65535, false, false}
 		};*/
-		BinaryImage *bimage2;
+		//BinaryImage *bimage2;
 		
 				
-		while(IsAutonomous())
+		while(IsAutonomous() && IsEnabled())
 		if(true){
 			
 			Wait(0.075);
@@ -98,17 +109,19 @@ public:
 		
 		
 		
-		int n = 0;
-		float sum = 0;
-		bool buttonState = stick.GetRawButton(6);
+		//int n = 0;
+		//float sum = 0;
+		bool buttonState = stick1.GetRawButton(6);
 		bool lightState = false;
 		bool changed = false;
 		while(IsOperatorControl())
 		{
-			bool state = stick.GetRawButton(6);
+			bool state = stick1.GetRawButton(6);
 			
-			if(state!=buttonState){
-				if(state){
+			if (state != buttonState)
+			{
+				if (state)
+				{
 					lightState = !lightState;
 					changed = true;
 				}
@@ -116,21 +129,31 @@ public:
 			
 			
 			
-			if(lightState) light.Set(light.kOn);
-			else light.Set(light.kOff);
+			if (lightState)
+			{
+				light.Set(light.kOn);
+			}
+			else
+			{
+				light.Set(light.kOff);
+			}
 			
 			changed = false;
 			
 			buttonState=state;
 
-			myRobot.TankDrive(-stick.GetRawAxis(5), -stick.GetRawAxis(2));
+			myRobot.TankDrive(-stick1.GetRawAxis(5), -stick1.GetRawAxis(2));
 			float distance = getInch(range.GetAverageVoltage());
-			sum+=distance;
-			if(n%100==0){
-				SmartDashboard::PutNumber("distance", sum/100.);
-				sum=0;
-			}
-			n++;
+			bool limswitch = limitSwitch.Get();
+			SmartDashboard::PutNumber("distance", distance);
+			//SmartDashboard::PutNumber("angle", angle);
+			SmartDashboard::PutNumber("limit switch", limswitch);
+			//sum+=distance;
+			//if(n%100==0){
+				//SmartDashboard::PutNumber("distance", sum/100.);
+				//sum=0;
+			//}
+			//n++;
 			Wait(0.005);				
 		}
 	}
@@ -144,6 +167,11 @@ public:
 	
 	float getInch(float voltage){
 		float scale = 5./512.;
+		return voltage/scale;
+	}
+	
+	float getAngle(float voltage){
+		float scale = 5.0/250.0;
 		return voltage/scale;
 	}
 };
