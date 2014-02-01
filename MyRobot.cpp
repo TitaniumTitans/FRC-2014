@@ -1,5 +1,4 @@
-#include "WPILib.h"
-#include "Feeder.h"
+#include "Robot.h"
 
 class RobotDemo : public SimpleRobot
 {
@@ -9,7 +8,6 @@ class RobotDemo : public SimpleRobot
 	AnalogChannel feederAngle;
 	RobotDrive myRobot;
 	Joystick stick1;
-	Joystick stick2;
 	Relay light;
 	DigitalInput limitSwitch; 
 	Victor feederArm;
@@ -22,7 +20,6 @@ public:
 		feederAngle(2),
 		myRobot(1, 2),	
 		stick1(1),
-		stick2(2), 
 		light(1),
 		limitSwitch(1),
 		feederArm(6),

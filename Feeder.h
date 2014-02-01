@@ -1,4 +1,3 @@
-#include "WPILib.h"
 
 	const float HOME_FEEDER_ANGLE = 90.0;
 	const float MIN_FEEDER_ANGLE = 50.0;
