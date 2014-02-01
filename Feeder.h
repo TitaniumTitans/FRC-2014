@@ -8,17 +8,10 @@ class Feeder
 {
   public:
 	Feeder();
-<<<<<<< HEAD
 	void Initialize();
 	void GetInputs();
 	void SetOutputs();
 	void ExecStep();
-=======
-	void initialize();
-	void getInputs();
-	void setOutputs();
-	void runStep();
->>>>>>> 8416ec77980e2ba5833fadb6e224b951d56a93b5
 	
   private:
 	
