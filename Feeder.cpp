@@ -1,16 +1,14 @@
 #include "Feeder.h"
 
-Feeder::Feeder() :
-	feederAnglePotentiometer(2),
-	stick2(2), 
-	feederArm(6),
-	feederWheel(8),
-	feederAngle(0),
-	feederState(FEEDER_STATE_HOME),
-	feederAngleMotorSpeed(0.0),
-	feederWheelMotorSpeed(0.0)
-{
-
+Feeder::Feeder(int feederArmInput, int feederWheelInput) {
+feederAnglePotentiometer = new AnalogChannel(2);
+feederArm = new Victor(feederArmInput);
+feederWheel = new Victor(feederWheelInput);
+feederAngle = 0;
+feederState = (FEEDER_STATE_HOME);
+feederAngleMotorSpeed = 0.0;
+feederWheelMotorSpeed = 0.0;
+this->Initialize();
 }
 
 void Feeder::Initialize()
@@ -68,9 +66,9 @@ void Feeder::ExecStep()
 	return;
 }
 
-void Feeder::setOutputs()
+void Feeder::SetOutputs()
 {
-	feederWheel.Set(feederWheelMotorSpeed);
+	//feederWheel.Set(feederWheelMotorSpeed);
 	//feederAngle.Set(feederAngleMotorSpeed);
 	return;
 }

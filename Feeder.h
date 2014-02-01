@@ -1,3 +1,4 @@
+#include "WPILib.h"
 
 	const float HOME_FEEDER_ANGLE = 90.0;
 	const float MIN_FEEDER_ANGLE = 50.0;
@@ -6,7 +7,7 @@
 class Feeder
 {
   public:
-	Feeder();
+	Feeder(int feederArmInput, int feederWheelInput);
 	void Initialize();
 	void GetInputs();
 	void SetOutputs();
@@ -22,10 +23,9 @@ class Feeder
 	};
 
 	
-	AnalogChannel feederAnglePotentiometer;
-	Joystick stick2;
-	Victor feederArm;
-	Victor feederWheel;
+	AnalogChannel* feederAnglePotentiometer;
+	Victor* feederArm;
+	Victor* feederWheel;
 	float feederAngle;
 	FEEDER_STATE feederState;
 	float feederAngleMotorSpeed;
