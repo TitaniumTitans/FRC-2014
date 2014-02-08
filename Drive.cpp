@@ -1,14 +1,11 @@
 #include "Drive.h"
 
-Drive::Drive(Operater* driverInput)
+Drive::Drive(Controllers* driverInput, int leftMotor, int rightMotor)
 {
-	myRobot = new RobotDrive(1, 2);
-	myRobot->SetExpiration(0.1);
 	this->driverInput = driverInput;
-}
-
-void Drive::SetHighGear(bool highGear){
-	HighGear = highGear;
+	myRobot = new RobotDrive(leftMotor, rightMotor);
+	myRobot->SetExpiration(0.1);
+	myRobot->SetSafetyEnabled(false);
 }
 
 void Drive::SetDriveCommand(float leftDriveCmd, float rightDriveCmd){
@@ -17,11 +14,12 @@ void Drive::SetDriveCommand(float leftDriveCmd, float rightDriveCmd){
 }
 
 void Drive::GetInputs(){
-	return;
-}
-void Drive::ExecStep(){
+	HighGear = driverInput->GetHighGear();
 	LeftDriveMotorOutput = driverInput->GetLeftDriveInput();
 	RightDriveMotorOutput = driverInput->GetRightDriveInput();
+}
+void Drive::ExecStep()
+{
 	this->SetHighGear(HighGear);
 	this->SetDriveCommand(LeftDriveMotorOutput, RightDriveMotorOutput);
 	this->SetOutputs();

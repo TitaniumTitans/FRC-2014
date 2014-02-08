@@ -1,13 +1,13 @@
 #include "WPILib.h"
-#include "Operater.h"
+#include "Controllers.h"
 
-#define LEFT_MOTOR 1
-#define RIGHT_MOTOR 2
+#define LEFT_MOTOR 4
+#define RIGHT_MOTOR 5
 
 class Drive
 {
   public:
-	Drive(Operater* driverInput);
+	Drive(Controllers* driverInput, int leftMotor, int rightMotor);
 
 	void SetHighGear(bool highGear);
 	void SetDriveCommand(float leftDriveCmd, float rightDriveCmd);
@@ -23,6 +23,6 @@ class Drive
 	bool highGear;
 	float leftDriveCmd;
 	float rightDriveCmd;
-	Operater* driverInput;
+	Controllers* driverInput;
 	
 };

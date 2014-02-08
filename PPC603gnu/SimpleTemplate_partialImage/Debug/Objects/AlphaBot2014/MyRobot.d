@@ -384,8 +384,9 @@ SimpleTemplate_partialImage/Debug/Objects/AlphaBot2014/MyRobot.o:  \
   C:/WindRiver/vxworks-6.3/target/h/WPILib/Vision/ColorImage.h \
   C:/WindRiver/vxworks-6.3/target/h/WPILib/WPIErrors.h \
   C:/WindRiver/workspace/AlphaBot2014/Drive.h \
-  C:/WindRiver/workspace/AlphaBot2014/Operater.h \
-  C:/WindRiver/workspace/AlphaBot2014/Feeder.h
+  C:/WindRiver/workspace/AlphaBot2014/Controllers.h \
+  C:/WindRiver/workspace/AlphaBot2014/Feeder.h \
+  C:/WindRiver/workspace/AlphaBot2014/Catapult.h
 
 C:/WindRiver/vxworks-6.3/target/h/WPILib/WPILib.h:
 
@@ -1155,6 +1156,8 @@ C:/WindRiver/vxworks-6.3/target/h/WPILib/WPIErrors.h:
 
 C:/WindRiver/workspace/AlphaBot2014/Drive.h:
 
-C:/WindRiver/workspace/AlphaBot2014/Operater.h:
+C:/WindRiver/workspace/AlphaBot2014/Controllers.h:
 
 C:/WindRiver/workspace/AlphaBot2014/Feeder.h:
+
+C:/WindRiver/workspace/AlphaBot2014/Catapult.h:

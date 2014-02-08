@@ -1,28 +1,37 @@
 #include "Feeder.h"
 
-Feeder::Feeder(int feederArmInput, int feederWheelInput) {
-feederAnglePotentiometer = new AnalogChannel(2);
-feederArm = new Victor(feederArmInput);
-feederWheel = new Victor(feederWheelInput);
-feederAngle = 0;
-feederState = (FEEDER_STATE_HOME);
-feederAngleMotorSpeed = 0.0;
-feederWheelMotorSpeed = 0.0;
-this->Initialize();
-}
-
-void Feeder::Initialize()
-{
+Feeder::Feeder(Controllers* driverInput, int feederArmInput, int feederWheelInput, int feederAngleAnalog) {
+	this->driverInput = driverInput;
+	feederAnglePotentiometer = new AnalogChannel(feederAngleAnalog);
+	feederArm = new Victor(feederArmInput);
+	feederWheel = new Victor(feederWheelInput);
+	feederAngle = 0;
+	feederState = (FEEDER_STATE_HOME);
+	feederAngleMotorSpeed = 0.0;
+	feederWheelMotorSpeed = 0.0;
 	feederState = FEEDER_STATE_HOME;
 	feederAngleMotorSpeed = 0.0;
 	feederWheelMotorSpeed = 0.0;
-	return;
+	LeftButtonPressed = false;
+	RightButtonPressed = false;
+	EjectButtonPressed = false;
+}
+
+Victor* Feeder::GetWheel(){
+	return feederWheel;
+	//feederWheel->Set(1);
 }
 
 void Feeder::GetInputs()
 {
-	//feederAngle = getAngleFromVoltage(feederAnglePotentiometer.GetAverageVoltage());
-	return;
+	LeftButtonPressed = driverInput->IsFeederLeftButtonPressed();
+	RightButtonPressed= driverInput->IsFeederRightButtonPressed();
+	EjectButtonPressed= driverInput->IsEjectButtonPressed();
+	feederAngle = this->GetAngleFromVoltage(feederAnglePotentiometer->GetVoltage());
+}
+
+void Feeder::SetState(FEEDER_STATE state){
+	feederState = state;
 }
 
 void Feeder::ExecStep()
@@ -31,17 +40,54 @@ void Feeder::ExecStep()
 	{
 	case FEEDER_STATE_DOWN:
 		feederWheelMotorSpeed = 1.0;
-		if (feederAngle > MIN_FEEDER_ANGLE)
+		if (feederAngle > DOWN_FEEDER_ANGLE+2.5)
 		{
-			feederAngleMotorSpeed = -1.0;
+			feederAngleMotorSpeed = 0.2;
+		}
+		else if(feederAngle < DOWN_FEEDER_ANGLE-2.5){
+			feederAngleMotorSpeed = -0.4;
 		}
 		else
 		{
 			feederAngleMotorSpeed = 0.0;
 		}
+		
+		if(LeftButtonPressed){
+			feederState = FEEDER_STATE_HOME;
+		}
+		else if(RightButtonPressed){
+			feederState = FEEDER_STATE_HOLD;
+		}
+		
 		break;
 		
 	case FEEDER_STATE_HOLD:
+		feederWheelMotorSpeed = 0.0;
+		if (feederAngle > HOLD_FEEDER_ANGLE+2.5)
+		{
+			feederAngleMotorSpeed = 0.4;
+		}
+		else if(feederAngle < HOLD_FEEDER_ANGLE-2.5){
+			if(feederAngle < HOME_FEEDER_ANGLE){
+				feederAngleMotorSpeed = -0.4;
+				feederWheelMotorSpeed = 1.0;
+			}
+			else
+				feederAngleMotorSpeed = -0.2;
+		}
+		else
+		{
+			feederAngleMotorSpeed = 0.0;
+		}
+		
+		if(LeftButtonPressed || driverInput->IsFireButtonPressed()){
+			feederState = FEEDER_STATE_HOME;
+		}
+		
+		if(EjectButtonPressed){
+			feederWheelMotorSpeed = -1;	
+		}
+		
 		break;
 		
 	case FEEDER_STATE_HOME:
@@ -49,33 +95,49 @@ void Feeder::ExecStep()
 		if (feederAngle > (HOME_FEEDER_ANGLE + 1.0) )
 		{
 			feederWheelMotorSpeed = 0.0;
-			feederAngleMotorSpeed = -1.0;
+			feederAngleMotorSpeed = 0.2;
 		}
 		else if (feederAngle < (HOME_FEEDER_ANGLE - 1.0) )
 		{
-			feederWheelMotorSpeed = 1.0;
-			feederAngleMotorSpeed = 1.0;
+			feederWheelMotorSpeed = -0.2;
+			feederAngleMotorSpeed = -0.2;
 		}
 		else
 		{
 			feederWheelMotorSpeed = 0.0;
 			feederAngleMotorSpeed = 0.0;
 		}
+		
+		if(LeftButtonPressed){
+			feederState = FEEDER_STATE_DOWN;
+		}
+		else if(RightButtonPressed){
+			feederState = FEEDER_STATE_HOLD;
+		}
+		
 		break;
 	}
+	
 	return;
 }
+
+float Feeder::GetAngle(){
+	return feederAngle;
+}
+
+
 
 void Feeder::SetOutputs()
 {
-	//feederWheel.Set(feederWheelMotorSpeed);
-	//feederAngle.Set(feederAngleMotorSpeed);
+	feederWheel->Set(feederWheelMotorSpeed);
+	feederArm->Set(feederAngleMotorSpeed);
 	return;
 }
 
-float Feeder::getAngleFromVoltage(float voltage)
+float Feeder::GetAngleFromVoltage(float voltage)
 {
-	float scale = 5.0/250.0;
-	return voltage/scale;
+	//float scale = 5.0/250.0;
+	//return voltage/scale;
+	return 46.80187207*voltage-77.5975039;
 }
 

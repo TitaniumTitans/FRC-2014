@@ -1,10 +1,17 @@
-//#include "Include.h"
-/*
+#include "WPILib.h"
+#include "Controllers.h"
+
 class Catapult
 {
   public:
+	Catapult::Catapult(Controllers* driverInput, int catapaultPWM, int leftLimitSwitch, int rightLimitSwitch);
+	void Catapult::SetSafeToFire(bool safeFire);
+	void Catapult::GetInputs();
+	void Catapult::ExecStep(void);
+	void Catapult::SetOutputs();
 	
   private:
+	Victor* ChooChooMotor;
 	bool CommandToFire;
 	bool SafeToFire;
 	int FireTickCount;
@@ -17,53 +24,8 @@ class Catapult
 		CATAPULT_STATE_FIRING = 3
 	};
 	CATAPULT_STATE catapultState;
+	Controllers* driverInput;
+	DigitalIOButton* LeftLimitSwitch;
+	DigitalIOButton* RightLimitSwitch;
 };
-/*
-void SetFire(bool fireCmd){
-	CommandedToFire = fireCmd;
-}
-void SetSafeToFire(bool safeFire){
-	SafeToFire = safeFire;
-}
-void GetInputs(){
-	CatapultArmed = (LimitSwitch1 || LimitSwitch2);
-}
-void ExecStep(void){
-	switch(catapultState){
-		case CATAPULT_STATE_ARM:
-			if(CatapultArmed){
-				ChooChooGearMotorSpeed = 0.0;
-				catapultState = CATAPULT_STATE_ARMED;
-			}
-			else{
-				ChooChooMotorSpeed = 1.0;
-			}
-			break;
-		case CATAPULT_STATE_ARMED:
-			ChooChooGearMotorSpeed = 0.0;
-			if(CommandedToFire){
-				catapultState = CATAPULT_STATE_FIRE;
-			}
-			break;
-		case CATAPULT_STATE_FIRE:
-			if(SafeToFire){
-				ChooChooGearMotorSpeed = 1.0;
-				catapultState = CATAPULT_STATE_FIRE;
-				FireTickCount = GetTickCount();
-			}
-			else{
-				ChooChooGearMotorSpeed = 0.0;				
-			}
-			break;
-		case CATAPULT_STATE_FIRING:
-			if((GetTickCount() - FireTickCount) >= MIN_FIRING_TIME){
-				catapultState = CATAPULT_STATE_ARM;
-			}
-			ChooChooGearMotorSpeed = 1.0;
-			break;
-	}
-	void SetOutputs(){
-		ChooChooGearMotor(ChooChooGearMotorSpeed);
-	}
-}
-*/
+
