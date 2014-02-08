@@ -89,12 +89,12 @@ public:
 			catapult->SetSafeToFire(feeder->GetAngle()<95);
 			
 			drive->ExecStep();
-			catapult->ExecStep();
+			//catapult->ExecStep();
 			feeder->ExecStep();
 			
 		
-			catapult->SetOutputs();
-			//myFeeder->SetOutputs();
+			//catapult->SetOutputs();
+			feeder->SetOutputs();
 			
 			Wait(0.005);				
 		}

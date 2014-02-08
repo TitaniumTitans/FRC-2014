@@ -21,14 +21,14 @@ class Feeder
 	static const float MIN_FEEDER_ANGLE = 32.0;
 	static const float MAX_FEEDER_ANGLE = 135.0;
 	
-	static const float HOME_FEEDER_ANGLE = 90.0;
-	static const float DOWN_FEEDER_ANGLE = 45.0;
-	static const float HOLD_FEEDER_ANGLE = 120.0;
+	static const float HOME_FEEDER_ANGLE = 80.0;
+	static const float DOWN_FEEDER_ANGLE = 35.0;
+	static const float HOLD_FEEDER_ANGLE = 95.0;
 	
   private:
 	
 	
-
+	PIDController* ArmPID;
 	Controllers* driverInput;
 	AnalogChannel* feederAnglePotentiometer;
 	Victor* feederArm;
@@ -37,6 +37,7 @@ class Feeder
 	FEEDER_STATE feederState;
 	float feederAngleMotorSpeed;
 	float feederWheelMotorSpeed;
+	float GetVoltageFromAngle(float angle);
 	
 	bool LeftButtonPressed;
 	bool RightButtonPressed;

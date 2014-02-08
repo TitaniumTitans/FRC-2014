@@ -6,6 +6,7 @@ Catapult::Catapult(Controllers* driverInput, int catapaultPWM, int leftLimitSwit
 	ChooChooMotor = new Victor(catapaultPWM);
 	LeftLimitSwitch = new DigitalIOButton(leftLimitSwitch);
 	RightLimitSwitch = new DigitalIOButton(rightLimitSwitch);
+	catapultState = CATAPULT_STATE_ARM;
 }
 
 void Catapult::SetSafeToFire(bool safeFire){

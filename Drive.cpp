@@ -20,7 +20,7 @@ void Drive::GetInputs(){
 }
 void Drive::ExecStep()
 {
-	this->SetHighGear(HighGear);
+	//this->SetHighGear(HighGear);
 	this->SetDriveCommand(LeftDriveMotorOutput, RightDriveMotorOutput);
 	this->SetOutputs();
 }
