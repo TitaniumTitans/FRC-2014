@@ -13,6 +13,27 @@ void Drive::SetDriveCommand(float leftDriveCmd, float rightDriveCmd){
 	RightDriveCommand = rightDriveCmd;
 }
 
+void Drive::SetHighGear(){
+	SmartDashboard::init();
+	SmartDashboard::PutString("sethighgear", "called");
+	Solenoid *leftSolenoid;
+	leftSolenoid = new Solenoid(1);
+	Solenoid *rightSolenoid;
+	rightSolenoid = new Solenoid(2);
+	if (HighGear == true) {
+		SmartDashboard::PutString("true", "true");
+		leftSolenoid->Set(true);
+		rightSolenoid->Set(false);
+		//HighGear = false;
+	}
+	if (HighGear == false) {
+		SmartDashboard::PutString("false", "false");
+		leftSolenoid->Set(true);
+		rightSolenoid->Set(false);
+		//HighGear = true;
+	}
+}
+
 void Drive::GetInputs(){
 	HighGear = driverInput->GetHighGear();
 	LeftDriveMotorOutput = driverInput->GetLeftDriveInput();
@@ -20,11 +41,11 @@ void Drive::GetInputs(){
 }
 void Drive::ExecStep()
 {
-	//this->SetHighGear(HighGear);
+	this->SetHighGear();
 	this->SetDriveCommand(LeftDriveMotorOutput, RightDriveMotorOutput);
 	this->SetOutputs();
 }
 void Drive::SetOutputs(){
 	myRobot->TankDrive(LeftDriveMotorOutput, RightDriveMotorOutput);
-	//GearShift.Set(HighGear);
+	Drive::SetHighGear();
 }

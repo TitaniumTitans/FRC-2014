@@ -41,7 +41,7 @@ void Feeder::ExecStep()
 	switch (feederState)
 	{
 	case FEEDER_STATE_DOWN:
-		feederWheelMotorSpeed = 1.0;
+		feederWheelMotorSpeed = 0.5;
 		/*if (feederAngle > DOWN_FEEDER_ANGLE+2.5)
 		{
 			feederAngleMotorSpeed = 0.2;
@@ -87,7 +87,7 @@ void Feeder::ExecStep()
 		ArmPID->SetSetpoint(3.6);//GetVoltageFromAngle(HOLD_FEEDER_ANGLE));
 		
 		if(feederAngle < HOME_FEEDER_ANGLE){
-			feederWheelMotorSpeed = 1.0;
+			feederWheelMotorSpeed = 0.5;
 		}
 		
 		if(LeftButtonPressed || driverInput->IsFireButtonPressed()){
@@ -118,7 +118,7 @@ void Feeder::ExecStep()
 			feederAngleMotorSpeed = 0.0;
 		}*/
 		
-		ArmPID->SetSetpoint(3.4);//GetVoltageFromAngle(HOME_FEEDER_ANGLE));
+		ArmPID->SetSetpoint(3.6);//GetVoltageFromAngle(HOME_FEEDER_ANGLE));
 		
 		if(LeftButtonPressed){
 			feederState = FEEDER_STATE_DOWN;
@@ -140,8 +140,6 @@ void Feeder::ExecStep()
 float Feeder::GetAngle(){
 	return feederAngle;
 }
-
-
 
 void Feeder::SetOutputs()
 {

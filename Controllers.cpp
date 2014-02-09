@@ -22,7 +22,7 @@ void Controllers::GetInputs()
 	FireCatapult = helperStick->GetRawButton(2);
 	EjectBall = helperStick->GetRawButton(3);
 	
-	bool CurrentHighGearToggleButton = driverStick->GetRawButton(2);
+	bool CurrentHighGearToggleButton = driverStick->GetRawButton(4);
 	if (! PrevHighGearButton && CurrentHighGearToggleButton)
 	{
 		HighGearToggle = !HighGearToggle;

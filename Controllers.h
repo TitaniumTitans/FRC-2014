@@ -16,9 +16,7 @@ public:
 	bool IsFeederLeftButtonPressed();
 	bool IsFeederRightButtonPressed();
 	
-	private:
-	
-	
+private:	
 	float DriveCommandLeft;
 	float DriveCommandRight;
 	bool FireCatapult;
@@ -32,7 +30,6 @@ public:
 	
 	Joystick* driverStick;
 	Joystick* helperStick;
-	
 	
 };
 

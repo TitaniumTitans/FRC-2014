@@ -1,7 +1,6 @@
 #include "WPILib.h"
 #include "Controllers.h"
 
-
 class Feeder
 {
   public:
