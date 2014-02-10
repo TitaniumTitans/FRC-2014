@@ -25,4 +25,7 @@ class Drive
 	float rightDriveCmd;
 	Controllers* driverInput;
 	
+	Solenoid *rightSolenoid;
+	Solenoid *leftSolenoid;
+	
 };

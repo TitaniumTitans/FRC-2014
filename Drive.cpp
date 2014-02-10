@@ -6,6 +6,8 @@ Drive::Drive(Controllers* driverInput, int leftMotor, int rightMotor)
 	myRobot = new RobotDrive(leftMotor, rightMotor);
 	myRobot->SetExpiration(0.1);
 	myRobot->SetSafetyEnabled(false);
+	this->leftSolenoid = new Solenoid(1);	
+	this->rightSolenoid = new Solenoid(2);
 }
 
 void Drive::SetDriveCommand(float leftDriveCmd, float rightDriveCmd){
@@ -14,23 +16,13 @@ void Drive::SetDriveCommand(float leftDriveCmd, float rightDriveCmd){
 }
 
 void Drive::SetHighGear(){
-	SmartDashboard::init();
-	SmartDashboard::PutString("sethighgear", "called");
-	Solenoid *leftSolenoid;
-	leftSolenoid = new Solenoid(1);
-	Solenoid *rightSolenoid;
-	rightSolenoid = new Solenoid(2);
 	if (HighGear == true) {
-		SmartDashboard::PutString("true", "true");
-		leftSolenoid->Set(true);
-		rightSolenoid->Set(false);
-		//HighGear = false;
+		leftSolenoid->Set(false);
+		rightSolenoid->Set(true);
 	}
 	if (HighGear == false) {
-		SmartDashboard::PutString("false", "false");
 		leftSolenoid->Set(true);
 		rightSolenoid->Set(false);
-		//HighGear = true;
 	}
 }
 
