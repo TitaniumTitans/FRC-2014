@@ -1,6 +1,7 @@
 #include "Feeder.h"
 
-Feeder::Feeder(Controllers* driverInput, int feederArmInput, int feederWheelInput, int feederAngleAnalog) {
+Feeder::Feeder(Controllers* driverInput, int feederArmInput, int feederWheelInput, int feederAngleAnalog) 
+{
 	this->driverInput = driverInput;
 	feederAnglePotentiometer = new AnalogChannel(feederAngleAnalog);
 	feederArm = new Victor(feederArmInput);

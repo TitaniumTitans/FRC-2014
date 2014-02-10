@@ -1,7 +1,7 @@
 #include "WPILib.h"
 #include "Drive.h"
 #include "Controllers.h"
-//#include "Feeder.h"
+#include "Feeder.h"
 #include "Catapult.h"
 
 #define LEFT_MOTOR_PWM 		4
@@ -19,8 +19,8 @@
 class Robot : public SimpleRobot
 {	
 	AnalogChannel range;
-	//AnalogChannel* feederAngle;
-	//Feeder* feeder;
+	AnalogChannel* feederAngle;
+	Feeder* feeder;
 	Controllers* driverInput;
 	Catapult* catapult;
 	Drive* drive;
@@ -34,9 +34,9 @@ public:
 		
 		
 	{
-		//feederAngle = new AnalogChannel(3);
+		feederAngle = new AnalogChannel(3);
 		driverInput = new Controllers(1, 2);
-		//feeder = new Feeder(driverInput, FEEDER_ARM_PWM, FEEDER_WHEEL_PWM, FEEDER_ANGLE_ANALOG);
+		feeder = new Feeder(driverInput, FEEDER_ARM_PWM, FEEDER_WHEEL_PWM, FEEDER_ANGLE_ANALOG);
 		drive = new Drive(driverInput, LEFT_MOTOR_PWM, RIGHT_MOTOR_PWM);
 		catapult = new Catapult(driverInput, CATAPAULT_WHEEL_PWM, LEFT_LIMIT_SWITCH, RIGHT_LIMIT_SWITCH);
 	}
@@ -80,8 +80,8 @@ public:
 			driverInput->GetInputs();
 			drive->GetInputs();
 			catapult->GetInputs();
-			//feeder->GetInputs();
-			//SmartDashboard::PutNumber("Feeder Angle", feeder->GetAngle());
+			feeder->GetInputs();
+			SmartDashboard::PutNumber("Feeder Angle", feeder->GetAngle());
 			//myFeeder->SetState(myFeeder->FEEDER_STATE_DOWN);
 			
 			//wheel->Set(1);
@@ -90,11 +90,11 @@ public:
 			
 			drive->ExecStep(); 
 			//catapult->ExecStep();
-			//feeder->ExecStep(); 
+			feeder->ExecStep(); 
 			
 		
 			catapult->SetOutputs();
-			//feeder->SetOutputs();
+			feeder->SetOutputs();
 			
 			Wait(0.005);
 		}

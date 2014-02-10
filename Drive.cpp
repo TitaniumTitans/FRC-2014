@@ -16,13 +16,16 @@ void Drive::SetDriveCommand(float leftDriveCmd, float rightDriveCmd){
 }
 
 void Drive::SetHighGear(){
+	SmartDashboard::init();
 	if (HighGear == true) {
 		leftSolenoid->Set(false);
 		rightSolenoid->Set(true);
+		SmartDashboard::PutString("Gear", "High Gear");
 	}
 	if (HighGear == false) {
 		leftSolenoid->Set(true);
 		rightSolenoid->Set(false);
+		SmartDashboard::PutString("Gear", "Low Gear");
 	}
 }
 
