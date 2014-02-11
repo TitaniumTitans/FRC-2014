@@ -15,7 +15,7 @@ void Catapult::SetSafeToFire(bool safeFire){
 
 void Catapult::GetInputs(){
 	CommandToFire = driverInput->IsFireButtonPressed();
-	CatapultArmed = (!LeftLimitSwitch->Get() || !RightLimitSwitch->Get());
+	CatapultArmed = (!LeftLimitSwitch->Get() || !RightLimitSwitch->Get() || driverInput->IsDebugArmButtonPressed());
 	//CatapultArmed = (false);
 }
 void Catapult::ExecStep(void){

@@ -4,22 +4,23 @@
 #include "Feeder.h"
 #include "Catapult.h"
 
+#define CATAPULT_WHEEL_PWM	2
 #define LEFT_MOTOR_PWM 		4
 #define RIGHT_MOTOR_PWM		5
 #define FEEDER_ARM_PWM		6
 #define FEEDER_WHEEL_PWM	10 // or 0
-#define CATAPAULT_WHEEL_PWM	2
 
 #define FEEDER_ANGLE_ANALOG	3
 
 #define LEFT_LIMIT_SWITCH	1
 #define RIGHT_LIMIT_SWITCH	3 //changed from 2
 
+#define LEFT_SOLENOID		1
+#define RIGHT_SOLENOID		2
+
 
 class Robot : public SimpleRobot
 {	
-	AnalogChannel range;
-	AnalogChannel* feederAngle;
 	Feeder* feeder;
 	Controllers* driverInput;
 	Catapult* catapult;
@@ -27,18 +28,12 @@ class Robot : public SimpleRobot
 	
 	
 public:
-	Robot():
-		
-		range(1)
-		//feederAngle(2),
-		
-		
+	Robot()	
 	{
-		feederAngle = new AnalogChannel(3);
 		driverInput = new Controllers(1, 2);
 		feeder = new Feeder(driverInput, FEEDER_ARM_PWM, FEEDER_WHEEL_PWM, FEEDER_ANGLE_ANALOG);
-		drive = new Drive(driverInput, LEFT_MOTOR_PWM, RIGHT_MOTOR_PWM);
-		catapult = new Catapult(driverInput, CATAPAULT_WHEEL_PWM, LEFT_LIMIT_SWITCH, RIGHT_LIMIT_SWITCH);
+		drive = new Drive(driverInput, LEFT_MOTOR_PWM, RIGHT_MOTOR_PWM, LEFT_SOLENOID, RIGHT_SOLENOID);
+		catapult = new Catapult(driverInput, CATAPULT_WHEEL_PWM, LEFT_LIMIT_SWITCH, RIGHT_LIMIT_SWITCH);
 	}
 
 	
@@ -49,7 +44,7 @@ public:
 				
 		while(IsAutonomous() && IsEnabled())
 		{
-			SmartDashboard::PutString("tasdfajhsdfsetetsettests", "iosjdfio");
+			//SmartDashboard::PutString("tasdfajhsdfsetetsettests", "iosjdfio");
 			//drive->ExecStep();
 			
 			DigitalInput *limitswitch = new DigitalInput(1);

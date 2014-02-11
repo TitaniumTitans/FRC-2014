@@ -1,28 +1,28 @@
 #include "Drive.h"
 
-Drive::Drive(Controllers* driverInput, int leftMotor, int rightMotor)
+Drive::Drive(Controllers* driverInput, int leftMotor, int rightMotor, int leftSolenoidNum, int rightSolenoidNum)
 {
 	this->driverInput = driverInput;
 	myRobot = new RobotDrive(leftMotor, rightMotor);
 	myRobot->SetExpiration(0.1);
 	myRobot->SetSafetyEnabled(false);
-	this->leftSolenoid = new Solenoid(1);	
-	this->rightSolenoid = new Solenoid(2);
+	this->leftSolenoid = new Solenoid(leftSolenoidNum);	
+	this->rightSolenoid = new Solenoid(rightSolenoidNum);
 }
 
-void Drive::SetDriveCommand(float leftDriveCmd, float rightDriveCmd){
+void Drive::SetDriveCommand(float leftDriveCmd){
 	LeftDriveCommand = leftDriveCmd;
 	RightDriveCommand = rightDriveCmd;
 }
 
 void Drive::SetHighGear(){
 	SmartDashboard::init();
-	if (HighGear == true) {
+	if (HighGear) {
 		leftSolenoid->Set(false);
 		rightSolenoid->Set(true);
 		SmartDashboard::PutString("Gear", "High Gear");
 	}
-	if (HighGear == false) {
+	else {
 		leftSolenoid->Set(true);
 		rightSolenoid->Set(false);
 		SmartDashboard::PutString("Gear", "Low Gear");
@@ -30,17 +30,18 @@ void Drive::SetHighGear(){
 }
 
 void Drive::GetInputs(){
-	HighGear = driverInput->GetHighGear();
-	LeftDriveMotorOutput = driverInput->GetLeftDriveInput();
-	RightDriveMotorOutput = driverInput->GetRightDriveInput();
+	HighGear = driverInput->IsHighGearButtonPressed();
+	//LeftDriveMotorOutput = driverInput->GetLeftDriveInput();
+	//RightDriveMotorOutput = driverInput->GetRightDriveInput();
 }
 void Drive::ExecStep()
 {
 	this->SetHighGear();
-	this->SetDriveCommand(LeftDriveMotorOutput, RightDriveMotorOutput);
+	this->SetDriveCommand(LeftDriveMotorOutput);
 	this->SetOutputs();
 }
 void Drive::SetOutputs(){
-	myRobot->TankDrive(LeftDriveMotorOutput, RightDriveMotorOutput);
+	myRobot->ArcadeDrive(driverInput->GetDriverJoystick());//LeftDriveMotorOutput);
+	//myRobot->ArcadeDrive(LeftDriveMotorOutput, RightDriveMotorOutput);
 	Drive::SetHighGear();
 }

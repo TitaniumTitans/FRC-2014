@@ -7,10 +7,10 @@
 class Drive
 {
   public:
-	Drive(Controllers* driverInput, int leftMotor, int rightMotor);
+	Drive(Controllers* driverInput, int leftMotor, int rightMotor, int leftSolenoidNum, int rightSolenoidNum);
 
 	void SetHighGear();
-	void SetDriveCommand(float leftDriveCmd, float rightDriveCmd);
+	void SetDriveCommand(float leftDriveCmd);
 	void GetInputs();
 	void ExecStep();
 	void SetOutputs();
@@ -21,7 +21,7 @@ class Drive
 	bool HighGear;
 	float LeftDriveMotorOutput, RightDriveMotorOutput;
 	bool highGear;
-	float leftDriveCmd;
+	//float leftDriveCmd;
 	float rightDriveCmd;
 	Controllers* driverInput;
 	

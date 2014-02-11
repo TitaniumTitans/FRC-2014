@@ -2,8 +2,8 @@
 
 Controllers::Controllers(int driverStickNum, int helperStickNum)
 {
-	driverStick = new Joystick(driverStickNum);
 	helperStick = new Joystick(helperStickNum);
+	driverStick = new Joystick(driverStickNum);
 	DriveCommandLeft = 0;
 	DriveCommandRight = 0;
 	FireCatapult = false;
@@ -12,17 +12,19 @@ Controllers::Controllers(int driverStickNum, int helperStickNum)
 	FeederRightPressed = false;
 	HighGearToggle = false;
 	PrevHighGearButton = false;
-}
+}    
 
 void Controllers::GetInputs()
 {
 	
-	DriveCommandLeft = driverStick->GetRawAxis(2);
-	DriveCommandRight = driverStick->GetRawAxis(5);
+	//DriveCommandLeft = driverStick->GetRawAxis(2);
+	//DriveCommandRight = driverStick->GetRawAxis(5);
+	//DriveCommandFwdRev = driverStick->GetRawAxis(5);
+	//DriveCommandRightLeft = driverStick->GetRawAxis(4);
 	FireCatapult = helperStick->GetRawButton(2);
 	EjectBall = helperStick->GetRawButton(3);
 	
-	bool CurrentHighGearToggleButton = driverStick->GetRawButton(4);
+	bool CurrentHighGearToggleButton = driverStick->GetRawButton(2);
 	if (! PrevHighGearButton && CurrentHighGearToggleButton)
 	{
 		HighGearToggle = !HighGearToggle;
@@ -43,11 +45,11 @@ void Controllers::GetInputs()
 		FeederRightPressed=false;
 	PrevFeederRightPressed = CurrentFeederRightPressed;
 	
-	
+	DebugArmButton = helperStick->GetRawButton(7);
 	
 }
 	
-bool Controllers::GetHighGear()
+bool Controllers::IsHighGearButtonPressed()
 {
 	return HighGearToggle;
 }
@@ -59,6 +61,14 @@ float Controllers::GetLeftDriveInput()
 float Controllers::GetRightDriveInput()
 {
 	return DriveCommandRight;
+}
+float Controllers::GetFwdRevDriveInput()
+{
+	return DriveCommandFwdRev;
+}
+float Controllers::GetRightLeftDriveInput()
+{
+	return DriveCommandRightLeft;
 }
 bool Controllers::IsFireButtonPressed()
 {
@@ -74,8 +84,16 @@ bool Controllers::IsFeederLeftButtonPressed()
 }
 
 bool Controllers::IsFeederRightButtonPressed()
-
 {
 	return FeederRightPressed;
 }
 
+Joystick* Controllers::GetDriverJoystick()
+{
+	return driverStick;
+}
+
+bool Controllers::IsDebugArmButtonPressed()
+{
+	return DebugArmButton;
+}
