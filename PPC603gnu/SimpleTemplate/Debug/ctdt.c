@@ -9,11 +9,13 @@
 
 void _GLOBAL__I__Z20FRC_userClassFactoryv();
 
-void _GLOBAL__I__ZN11ControllersC2Eii();
+void _GLOBAL__I__ZN11ControllersC2Efii();
 
 void _GLOBAL__I__ZN5DriveC2EP11Controllersiiii();
 
 void _GLOBAL__I__ZN6FeederC2EP11Controllersiii();
+
+void _GLOBAL__I__ZN7SensorsC2EP11Controllersii();
 
 void _GLOBAL__I__ZN8CatapultC2EP11Controllersiii();
 
@@ -73,9 +75,10 @@ extern void (*_ctors[])();
 void (*_ctors[])() =
     {
     _GLOBAL__I__Z20FRC_userClassFactoryv,
-    _GLOBAL__I__ZN11ControllersC2Eii,
+    _GLOBAL__I__ZN11ControllersC2Efii,
     _GLOBAL__I__ZN5DriveC2EP11Controllersiiii,
     _GLOBAL__I__ZN6FeederC2EP11Controllersiii,
+    _GLOBAL__I__ZN7SensorsC2EP11Controllersii,
     _GLOBAL__I__ZN8CatapultC2EP11Controllersiii,
     _GLOBAL__I__ZN12PrintCommandC2EPKc,
     _GLOBAL__I__ZN9Scheduler9_instanceE,
@@ -108,11 +111,13 @@ void (*_ctors[])() =
 
 void _GLOBAL__D__Z20FRC_userClassFactoryv();
 
-void _GLOBAL__D__ZN11ControllersC2Eii();
+void _GLOBAL__D__ZN11ControllersC2Efii();
 
 void _GLOBAL__D__ZN5DriveC2EP11Controllersiiii();
 
 void _GLOBAL__D__ZN6FeederC2EP11Controllersiii();
+
+void _GLOBAL__D__ZN7SensorsC2EP11Controllersii();
 
 void _GLOBAL__D__ZN8CatapultC2EP11Controllersiii();
 
@@ -162,9 +167,10 @@ extern void (*_dtors[])();
 void (*_dtors[])() =
     {
     _GLOBAL__D__Z20FRC_userClassFactoryv,
-    _GLOBAL__D__ZN11ControllersC2Eii,
+    _GLOBAL__D__ZN11ControllersC2Efii,
     _GLOBAL__D__ZN5DriveC2EP11Controllersiiii,
     _GLOBAL__D__ZN6FeederC2EP11Controllersiii,
+    _GLOBAL__D__ZN7SensorsC2EP11Controllersii,
     _GLOBAL__D__ZN8CatapultC2EP11Controllersiii,
     _GLOBAL__D__ZN9Scheduler9_instanceE,
     _GLOBAL__D_wpi_error_s_ModuleIndexOutOfRange,

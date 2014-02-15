@@ -1,6 +1,6 @@
 #include "Controllers.h"
 
-Controllers::Controllers(int driverStickNum, int helperStickNum)
+Controllers::Controllers(float period, int driverStickNum, int helperStickNum)
 {
 	helperStick = new Joystick(helperStickNum);
 	driverStick = new Joystick(driverStickNum);
@@ -12,6 +12,10 @@ Controllers::Controllers(int driverStickNum, int helperStickNum)
 	FeederRightPressed = false;
 	HighGearToggle = false;
 	PrevHighGearButton = false;
+	LightButtonPressed = false;
+	PrevLightButtonPressed = false;
+	this->period = period;
+	
 }    
 
 void Controllers::GetInputs()
@@ -46,6 +50,13 @@ void Controllers::GetInputs()
 	PrevFeederRightPressed = CurrentFeederRightPressed;
 	
 	DebugArmButton = helperStick->GetRawButton(7);
+	
+	bool CurrentLightPressed = helperStick->GetRawButton(1);
+	if( !PrevLightButtonPressed && CurrentLightPressed)
+		LightButtonPressed=true;
+	else
+		LightButtonPressed=false;
+	PrevLightButtonPressed = CurrentLightPressed;
 	
 }
 	
@@ -96,4 +107,14 @@ Joystick* Controllers::GetDriverJoystick()
 bool Controllers::IsDebugArmButtonPressed()
 {
 	return DebugArmButton;
+}
+
+bool Controllers::IsLightButtonPressed()
+{
+	return LightButtonPressed;
+}
+
+float Controllers::GetPeriod()
+{
+	return period;
 }

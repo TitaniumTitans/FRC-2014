@@ -8,8 +8,10 @@
 #define LEFT_MOTOR_PWM 		4
 #define RIGHT_MOTOR_PWM		5
 #define FEEDER_ARM_PWM		6
-#define FEEDER_WHEEL_PWM	10 // or 0
+#define FEEDER_WHEEL_PWM	8 // or 0
+#define CAMERA_LED			7
 
+#define RANGE_FINDER_ANALOG	2
 #define FEEDER_ANGLE_ANALOG	3
 
 #define LEFT_LIMIT_SWITCH	1
@@ -18,6 +20,8 @@
 #define LEFT_SOLENOID		1
 #define RIGHT_SOLENOID		2
 
+#define PERIOD_IN_SECONDS	0.01
+
 
 class Robot : public SimpleRobot
 {	
@@ -25,12 +29,14 @@ class Robot : public SimpleRobot
 	Controllers* driverInput;
 	Catapult* catapult;
 	Drive* drive;
+	Timer* timer;
 	
 	
 public:
 	Robot()	
 	{
-		driverInput = new Controllers(1, 2);
+		timer = new Timer();
+		driverInput = new Controllers(PERIOD_IN_SECONDS, 1, 2);
 		feeder = new Feeder(driverInput, FEEDER_ARM_PWM, FEEDER_WHEEL_PWM, FEEDER_ANGLE_ANALOG);
 		drive = new Drive(driverInput, LEFT_MOTOR_PWM, RIGHT_MOTOR_PWM, LEFT_SOLENOID, RIGHT_SOLENOID);
 		catapult = new Catapult(driverInput, CATAPULT_WHEEL_PWM, LEFT_LIMIT_SWITCH, RIGHT_LIMIT_SWITCH);
@@ -66,6 +72,9 @@ public:
 		bool changed = false;*/
 		//Victor* wheel = myFeeder->GetWheel();
 		//int n = 0;
+		
+		
+		timer->Start();
 		while(IsOperatorControl() && IsEnabled())
 		{
 			
@@ -76,7 +85,7 @@ public:
 			drive->GetInputs();
 			catapult->GetInputs();
 			feeder->GetInputs();
-			SmartDashboard::PutNumber("Feeder Angle", feeder->GetAngle());
+			//SmartDashboard::PutNumber("Feeder Angle", feeder->GetAngle());
 			//myFeeder->SetState(myFeeder->FEEDER_STATE_DOWN);
 			
 			//wheel->Set(1);
@@ -88,10 +97,12 @@ public:
 			feeder->ExecStep(); 
 			
 		
-			catapult->SetOutputs();
+			//catapult->SetOutputs();
 			feeder->SetOutputs();
 			
-			Wait(0.005);
+			while(timer->Get()<(PERIOD_IN_SECONDS));
+			timer->Reset();
+			//Wait(0.005);
 		}
 	}
 

@@ -6,7 +6,7 @@
 class Controllers
 {
 public:
-	Controllers(int driverStickNum, int helperStickNum);
+	Controllers(float period, int driverStickNum, int helperStickNum);
 	void GetInputs();
 	bool IsHighGearButtonPressed();
 	float GetLeftDriveInput();
@@ -18,7 +18,10 @@ public:
 	bool IsFeederLeftButtonPressed();
 	bool IsFeederRightButtonPressed();
 	bool IsDebugArmButtonPressed();
+	bool IsLightButtonPressed();
 	Joystick* GetDriverJoystick();
+	float GetPeriod();
+	
 	
 private:	
 	float DriveCommandLeft;
@@ -34,6 +37,9 @@ private:
 	bool HighGearToggle;
 	bool PrevHighGearButton;
 	bool DebugArmButton;
+	bool LightButtonPressed;
+	bool PrevLightButtonPressed;
+	float period;
 	
 	Joystick* driverStick;
 	Joystick* helperStick;

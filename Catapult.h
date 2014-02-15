@@ -4,7 +4,7 @@
 class Catapult
 {
   public:
-	Catapult::Catapult(Controllers* driverInput, int catapaultPWM, int leftLimitSwitch, int rightLimitSwitch);
+	Catapult(Controllers* driverInput, int catapaultPWM, int leftLimitSwitch, int rightLimitSwitch);
 	void Catapult::SetSafeToFire(bool safeFire);
 	void Catapult::GetInputs();
 	void Catapult::ExecStep(void);

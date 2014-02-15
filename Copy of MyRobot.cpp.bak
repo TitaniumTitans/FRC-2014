@@ -15,7 +15,6 @@ class RobotDemo : public SimpleRobot
 
 public:
 	RobotDemo():
-
 		range(1),
 		feederAngle(2),
 		myRobot(1, 2),	
