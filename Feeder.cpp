@@ -53,12 +53,10 @@ void Feeder::SetState(FEEDER_STATE state){
 
 void Feeder::ExecStep()
 {
-	
 	//feederWheelMotorSpeed = 1.0;
 	feederAngleMotorSpeed = 0.0;
 	
 	CurrFeederArmSpeed = (feederAngle-PrevFeederArmAngle)/driverInput->GetPeriod();
-	
 	switch (this->feederState)
 	{
 		case FEEDER_STATE_DOWN:
@@ -77,6 +75,7 @@ void Feeder::ExecStep()
 				feederAngleMotorSpeed = 0.0;
 			}
 			*/
+	
 			//ArmPID->SetSetpoint(2.3);//GetVoltageFromAngle(DOWN_FEEDER_ANGLE));
 			if(feederAngle < DOWN_FEEDER_ANGLE+10){
 				float error = CurrFeederArmSpeed-TargetFeederArmSpeed;
@@ -129,21 +128,38 @@ void Feeder::ExecStep()
 		
 		break;
 	}
-	
+	/*
 	if(feederAngle <= 90){
 		feederWheelMotorSpeed = 1;
 	}
 	else{
 		feederWheelMotorSpeed = 0;
 	}
+	*/
+	if(driverInput->IsFeederLeftButtonPressed()){
+		if (feederWheelMotorSpeed == 0) {
+			feederWheelMotorSpeed = -1;
+		}
+		
+		else {
+			feederWheelMotorSpeed = 0;
+		}
+	}
 	
-	if(driverInput->IsEjectButtonPressed()){
-		feederWheelMotorSpeed = -1;
+	if(driverInput->IsFeederRightButtonPressed()){
+		if (feederWheelMotorSpeed == 0) {
+			feederWheelMotorSpeed = 1;
+		}
+		
+		else {
+			feederWheelMotorSpeed = 0;
+		}
 	}
 	
 	PrevFeederArmAngle = feederAngle;
 
 	return;
+	
 }
 
 float Feeder::GetAngle()
@@ -153,7 +169,7 @@ float Feeder::GetAngle()
 
 void Feeder::SetOutputs()
 {
-	feederWheel->Set(feederWheelMotorSpeed);
+	feederWheel->Set(feederWheelMotorSpeed);//feederWheelMotorSpeed);
 	feederArm->Set(0);//feederAngleMotorSpeed);
 	return;
 }

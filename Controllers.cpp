@@ -28,13 +28,13 @@ void Controllers::GetInputs()
 	FireCatapult = helperStick->GetRawButton(2);
 	EjectBall = helperStick->GetRawButton(3);
 	
-	bool CurrentHighGearToggleButton = driverStick->GetRawButton(2);
+	bool CurrentHighGearToggleButton = driverStick->GetRawButton(2) || driverStick->GetRawButton(1);
 	if (! PrevHighGearButton && CurrentHighGearToggleButton)
 	{
 		HighGearToggle = !HighGearToggle;
 	} 
 	PrevHighGearButton=CurrentHighGearToggleButton;
-	
+	 
 	bool CurrentFeederLeftPressed = helperStick->GetRawButton(5);
 	if( !PrevFeederLeftPressed && CurrentFeederLeftPressed)
 		FeederLeftPressed=true;

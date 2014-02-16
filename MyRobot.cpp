@@ -3,6 +3,7 @@
 #include "Controllers.h"
 #include "Feeder.h"
 #include "Catapult.h"
+#include "Sensors.h"
 
 #define CATAPULT_WHEEL_PWM	2
 #define LEFT_MOTOR_PWM 		4
@@ -50,11 +51,14 @@ public:
 				
 		while(IsAutonomous() && IsEnabled())
 		{
-			//SmartDashboard::PutString("tasdfajhsdfsetetsettests", "iosjdfio");
 			//drive->ExecStep();
 			
+			//SmartDashboard::PutString("State", "Started");
+			
+			/*
 			DigitalInput *limitswitch = new DigitalInput(1);
 			limitswitch->Get();
+			*/
 		}
 	}
 
