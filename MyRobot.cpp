@@ -21,6 +21,12 @@
 #define LEFT_SOLENOID		1
 #define RIGHT_SOLENOID		2
 
+//Alpha bot 
+//#define LEFT_SOLENOID		2
+//#define RIGHT_SOLENOID	4
+
+//LIMIT_SWITCH				2
+
 #define PERIOD_IN_SECONDS	0.01
 
 
