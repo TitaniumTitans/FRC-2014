@@ -1,11 +1,20 @@
 #include "Controllers.h"
 
+#define FIRE_CATAPULT_BUTTON	1
+#define EJECT_BALL_BUTTON		2
+#define FEEDER_TOGGLE_BUTTON	3
+#define GEAR_SHIFT_DOWN_BUTTON	4
+#define GEAR_SHIFT_UP_BUTTON	5
+#define CAMERA_LIGHT_BUTTON		11
+#define DEBUG_ARM_BUTTON		8
+
+
 Controllers::Controllers(float period, int driverStickNum, int helperStickNum)
 {
-	helperStick = new Joystick(helperStickNum);
+	//helperStick = new Joystick(helperStickNum);
 	driverStick = new Joystick(driverStickNum);
-	DriveCommandLeft = 0;
-	DriveCommandRight = 0;
+	//DriveCommandLeft = 0;
+	//DriveCommandRight = 0;
 	FireCatapult = false;
 	EjectBall = false;
 	FeederLeftPressed = false;
@@ -20,38 +29,35 @@ Controllers::Controllers(float period, int driverStickNum, int helperStickNum)
 
 void Controllers::GetInputs()
 {
+
 	
-	//DriveCommandLeft = driverStick->GetRawAxis(2);
-	//DriveCommandRight = driverStick->GetRawAxis(5);
-	//DriveCommandFwdRev = driverStick->GetRawAxis(5);
-	//DriveCommandRightLeft = driverStick->GetRawAxis(4);
-	FireCatapult = helperStick->GetRawButton(2);
-	EjectBall = helperStick->GetRawButton(3);
+	FireCatapult = driverStick->GetRawButton(FIRE_CATAPULT_BUTTON);
+	EjectBall = driverStick->GetRawButton(EJECT_BALL_BUTTON);
 	
-	bool CurrentHighGearToggleButton = driverStick->GetRawButton(2) || driverStick->GetRawButton(1);
+	bool CurrentHighGearToggleButton = driverStick->GetRawButton(GEAR_SHIFT_DOWN_BUTTON) || driverStick->GetRawButton(GEAR_SHIFT_UP_BUTTON);
 	if (! PrevHighGearButton && CurrentHighGearToggleButton)
 	{
 		HighGearToggle = !HighGearToggle;
 	} 
 	PrevHighGearButton=CurrentHighGearToggleButton;
 	 
-	bool CurrentFeederLeftPressed = helperStick->GetRawButton(5);
+	bool CurrentFeederLeftPressed = driverStick->GetRawButton(FEEDER_TOGGLE_BUTTON);
 	if( !PrevFeederLeftPressed && CurrentFeederLeftPressed)
 		FeederLeftPressed=true;
 	else
 		FeederLeftPressed=false;
 	PrevFeederLeftPressed = CurrentFeederLeftPressed;
 	
-	bool CurrentFeederRightPressed = helperStick->GetRawButton(6);
+	bool CurrentFeederRightPressed = driverStick->GetRawButton(FEEDER_TOGGLE_BUTTON);
 	if( !PrevFeederRightPressed && CurrentFeederRightPressed)
 		FeederRightPressed=true;
 	else
 		FeederRightPressed=false;
 	PrevFeederRightPressed = CurrentFeederRightPressed;
 	
-	DebugArmButton = helperStick->GetRawButton(7);
+	DebugArmButton = driverStick->GetRawButton(DEBUG_ARM_BUTTON);
 	
-	bool CurrentLightPressed = helperStick->GetRawButton(1);
+	bool CurrentLightPressed = driverStick->GetRawButton(CAMERA_LIGHT_BUTTON);
 	if( !PrevLightButtonPressed && CurrentLightPressed)
 		LightButtonPressed=true;
 	else
@@ -64,23 +70,7 @@ bool Controllers::IsHighGearButtonPressed()
 {
 	return HighGearToggle;
 }
-	
-float Controllers::GetLeftDriveInput()
-{
-	return DriveCommandLeft;
-}
-float Controllers::GetRightDriveInput()
-{
-	return DriveCommandRight;
-}
-float Controllers::GetFwdRevDriveInput()
-{
-	return DriveCommandFwdRev;
-}
-float Controllers::GetRightLeftDriveInput()
-{
-	return DriveCommandRightLeft;
-}
+
 bool Controllers::IsFireButtonPressed()
 {
 	return FireCatapult;

@@ -9,10 +9,6 @@ public:
 	Controllers(float period, int driverStickNum, int helperStickNum);
 	void GetInputs();
 	bool IsHighGearButtonPressed();
-	float GetLeftDriveInput();
-	float GetRightDriveInput();
-	float GetFwdRevDriveInput();
-	float GetRightLeftDriveInput();
 	bool IsFireButtonPressed();
 	bool IsEjectButtonPressed();
 	bool IsFeederLeftButtonPressed();
@@ -23,11 +19,8 @@ public:
 	float GetPeriod();
 	
 	
+	
 private:	
-	float DriveCommandLeft;
-	float DriveCommandRight;
-	float DriveCommandFwdRev;
-	float DriveCommandRightLeft;
 	bool FireCatapult;
 	bool EjectBall;
 	bool FeederLeftPressed;
@@ -42,7 +35,7 @@ private:
 	float period;
 	
 	Joystick* driverStick;
-	Joystick* helperStick;
+	//Joystick* helperStick;
 	
 };
 

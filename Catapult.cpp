@@ -1,64 +1,88 @@
 #include "Catapult.h"
 
-Catapult::Catapult(Controllers* driverInput, int catapaultPWM, int leftLimitSwitch, int rightLimitSwitch) 
+const float MIN_FIRING_TIME_IN_SECONDS = 1.0;
+
+Catapult::Catapult(Controllers* driverInput, int catapaultPWM, int limitSwitch) 
 {
 	this->driverInput = driverInput;
 	ChooChooMotor = new Victor(catapaultPWM);
-	LeftLimitSwitch = new DigitalIOButton(leftLimitSwitch);
-	RightLimitSwitch = new DigitalIOButton(rightLimitSwitch);
+	LimitSwitch = new DigitalInput(limitSwitch);
 	catapultState = CATAPULT_STATE_ARM;
+	MaxChooChooMotorSpeed = 0.8;
+	timer = new Timer();
+	timer->Reset();
 }
 
-void Catapult::SetSafeToFire(bool safeFire){
+void Catapult::SetSafeToFire(bool safeFire)
+{
 	SafeToFire = safeFire;
 }
 
-void Catapult::GetInputs(){
+void Catapult::GetInputs()
+{
 	CommandToFire = driverInput->IsFireButtonPressed();
 	//CatapultArmed = (!LeftLimitSwitch->Get() || !RightLimitSwitch->Get() || driverInput->IsDebugArmButtonPressed());
-	CatapultArmed = (!RightLimitSwitch->Get() || driverInput->IsDebugArmButtonPressed());
-	SmartDashboard::PutBoolean("rightbutton", RightLimitSwitch->Get());
+	CatapultArmed = (!LimitSwitch->Get() || driverInput->IsDebugArmButtonPressed());
+	//SmartDashboard::PutBoolean("rightbutton", LimitSwitch->Get());
 	//CatapultArmed = (false);
 }
-void Catapult::ExecStep(void){
-	//ChooChooMotorSpeed = 0.8;
-	switch(catapultState){
+void Catapult::ExecStep(void)
+{
+	//ChooChooMotorSpeed = MaxChooChooMotorSpeed;
+	switch (catapultState)
+	{
 		case CATAPULT_STATE_ARM:
-			if(CatapultArmed){
+			if (CatapultArmed)
+			{
 				ChooChooMotorSpeed = 0.0;
 				catapultState = CATAPULT_STATE_ARMED;
 			}
-			else{
-				ChooChooMotorSpeed = 0.8;
+			else
+			{
+				ChooChooMotorSpeed = MaxChooChooMotorSpeed;
 			}
 			break;
+			
 		case CATAPULT_STATE_ARMED:
 			ChooChooMotorSpeed = 0.0;
-			if(CommandToFire){
+			if (CommandToFire)
+			{
 				catapultState = CATAPULT_STATE_FIRE;
 			}
 			break;
+			
 		case CATAPULT_STATE_FIRE:
-			if(SafeToFire){
-				ChooChooMotorSpeed = 0.8;
-				//catapultState = CATAPULT_STATE_FIRE;
-				//FireTickCount = GetTickCount();
+			if (SafeToFire)
+			{
+				ChooChooMotorSpeed = MaxChooChooMotorSpeed;
+				catapultState = CATAPULT_STATE_FIRING;
+				timer->Reset();
+				timer->Start();
 			}
-			if(!CatapultArmed){
+			/*if (!CatapultArmed)
+			{
 				ChooChooMotorSpeed = 0.0;
 				catapultState = CATAPULT_STATE_ARM;
-			}
+			}*/
 			break;
 		case CATAPULT_STATE_FIRING:
-			//if((GetTickCount() - FireTickCount) >= MIN_FIRING_TIME){
-			//	catapultState = CATAPULT_STATE_ARM;
-			//}
-			ChooChooMotorSpeed = 0.8;
+			if (timer->Get() >= MIN_FIRING_TIME_IN_SECONDS)
+			{
+				catapultState = CATAPULT_STATE_ARM;
+			}
+			ChooChooMotorSpeed = MaxChooChooMotorSpeed;
 			break;
 	}
+	SmartDashboard::PutNumber("choochoomotorspeed", ChooChooMotorSpeed);
+	SmartDashboard::PutNumber("state", catapultState);
 }
-	void Catapult::SetOutputs(){
-			ChooChooMotor->Set(ChooChooMotorSpeed);
-	}
+
+void Catapult::SetOutputs()
+{
+	SmartDashboard::PutNumber("choochoomotorspeed2", ChooChooMotorSpeed);
+		ChooChooMotor->Set(ChooChooMotorSpeed);
+		//ChooChooMotor->Set(1.0);
+		//ChooChooMotor->Set(0.8);
+}
 
 

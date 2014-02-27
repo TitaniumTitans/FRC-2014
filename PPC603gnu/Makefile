@@ -186,6 +186,14 @@ SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/MyRobot.o : $(PRJ_R
 	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -ansi -Wall  -MD -MP -mlongcall $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -DCPU=$(CPU) -DTOOL_FAMILY=$(TOOL_FAMILY) -DTOOL=$(TOOL) -D_WRS_KERNEL   $(DEFINES) -o "$@" -c "$<"
 
 
+SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/PIDControl.o : $(PRJ_ROOT_DIR)/PIDControl.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -ansi -Wall  -MD -MP -mlongcall $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -DCPU=$(CPU) -DTOOL_FAMILY=$(TOOL_FAMILY) -DTOOL=$(TOOL) -D_WRS_KERNEL   $(DEFINES) -o "$@" -c "$<"
+
+
+SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Profile.o : $(PRJ_ROOT_DIR)/Profile.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -ansi -Wall  -MD -MP -mlongcall $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -DCPU=$(CPU) -DTOOL_FAMILY=$(TOOL_FAMILY) -DTOOL=$(TOOL) -D_WRS_KERNEL   $(DEFINES) -o "$@" -c "$<"
+
+
 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Sensors.o : $(PRJ_ROOT_DIR)/Sensors.cpp $(FORCE_FILE_BUILD)
 	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -ansi -Wall  -MD -MP -mlongcall $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -DCPU=$(CPU) -DTOOL_FAMILY=$(TOOL_FAMILY) -DTOOL=$(TOOL) -D_WRS_KERNEL   $(DEFINES) -o "$@" -c "$<"
 
@@ -196,6 +204,8 @@ OBJECTS_SimpleTemplate_partialImage = SimpleTemplate_partialImage/$(MODE_DIR)/Ob
 	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Drive.o \
 	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Feeder.o \
 	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/MyRobot.o \
+	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/PIDControl.o \
+	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Profile.o \
 	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Sensors.o
 
 SimpleTemplate_partialImage/$(MODE_DIR)/SimpleTemplate_partialImage.o : $(OBJECTS_SimpleTemplate_partialImage)
@@ -212,7 +222,7 @@ force :
 
 DEP_FILES := SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Autonomous.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Catapult.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Controllers.d \
 	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Drive.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Feeder.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/MyRobot.d \
-	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Sensors.d
+	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/PIDControl.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Profile.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Sensors.d
 -include $(DEP_FILES)
 
 

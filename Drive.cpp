@@ -3,7 +3,9 @@
 Drive::Drive(Controllers* driverInput, int leftMotor, int rightMotor, int leftSolenoidNum, int rightSolenoidNum)
 {
 	this->driverInput = driverInput;
-	myRobot = new RobotDrive(leftMotor, rightMotor);
+	leftDrive = new Victor(leftMotor);
+	rightDrive = new Victor(rightMotor);
+	myRobot = new RobotDrive(leftDrive, rightDrive);
 	myRobot->SetExpiration(0.1);
 	myRobot->SetSafetyEnabled(false);
 	this->leftSolenoid = new Solenoid(leftSolenoidNum);	

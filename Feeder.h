@@ -1,5 +1,7 @@
 #include "WPILib.h"
 #include "Controllers.h"
+#include "PIDControl.h"
+#include "Profile.h"
 
 class Feeder
 {
@@ -7,7 +9,8 @@ class Feeder
 	enum FEEDER_STATE 
 		{
 			FEEDER_STATE_HOME = 1,
-			FEEDER_STATE_DOWN = 2
+			FEEDER_STATE_DOWN = 2,
+			FEEDER_STATE_INIT = 3
 		};
 	Feeder(Controllers* driverInput, int feederArmInput, int feederWheelInput, int feederAngleAnalog);
 	void GetInputs();
@@ -24,15 +27,15 @@ class Feeder
 	//static const float FEEDER_STOP_IN_ANGLE = 95.0;
 	static const float DOWN_FEEDER_ANGLE = 42.0;
 	static const float HOLD_FEEDER_ANGLE = 130.0;
+	Victor* feederArm;
+	Victor* feederWheel;
 	
   private:
-	
 	
 	PIDController* ArmPID;
 	Controllers* driverInput;
 	AnalogChannel* feederAnglePotentiometer;
-	Victor* feederArm;
-	Victor* feederWheel;
+
 	float feederAngle;
 	FEEDER_STATE feederState;
 	float feederAngleMotorSpeed;
@@ -50,6 +53,12 @@ class Feeder
 	bool EjectButtonPressed;
 	bool FireButtonPressed;
 	
+	Timer* timer;
+	Profile profile;
+	PIDControl pidControl;
 	
 	float GetAngleFromVoltage(float voltage);
+	
+	float angles[5];
+	int arrayIndex;
 };

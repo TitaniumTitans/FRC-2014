@@ -13,7 +13,7 @@ Feeder::Feeder(Controllers* driverInput, int feederArmInput, int feederWheelInpu
 	feederAngle = 0;
 	feederAngleMotorSpeed = 0.0;
 	feederWheelMotorSpeed = 0.0;
-	feederState = FEEDER_STATE_HOME;
+	feederState = FEEDER_STATE_DOWN;
 	feederAngleMotorSpeed = 0.0;
 	feederWheelMotorSpeed = 0.0;
 	LeftButtonPressed = false;
@@ -23,16 +23,25 @@ Feeder::Feeder(Controllers* driverInput, int feederArmInput, int feederWheelInpu
 	PrevFeederArmAngle = 0.0;
 	CurrFeederArmSpeed = 0.0;
 	
+	//angles = new float[5];
+	
+	arrayIndex = 0;
+	
 	TargetFeederArmSpeed = 0;
 	K1 = -2;
 	
-	//ArmPID = new PIDController(0.1,0.001,0.0,feederAnglePotentiometer, feederArm);
-	//ArmPID->Enable();
+	timer = new Timer();
+	profile.SetAccel(90.0);
+	profile.SetMaxVelocity(45.0);
+	
+	pidControl.SetKp(0.02);
+	pidControl.SetKi(0.0);
+	pidControl.SetKd(0.0);
 }
 
-Victor* Feeder::GetWheel(){
+Victor* Feeder::GetWheel()
+{
 	return feederWheel;
-	//feederWheel->Set(1);
 }
 
 void Feeder::GetInputs()
@@ -42,124 +51,123 @@ void Feeder::GetInputs()
 	EjectButtonPressed = driverInput->IsEjectButtonPressed();
 	FireButtonPressed = driverInput->IsFireButtonPressed();
 	feederAngle = this->GetAngleFromVoltage(feederAnglePotentiometer->GetVoltage());
+	angles[arrayIndex] = feederAngle;
+	arrayIndex = arrayIndex>=4?0:arrayIndex+1;
 	
 	SmartDashboard::PutNumber("Potentiometer Voltage", feederAnglePotentiometer->GetVoltage());
+	SmartDashboard::PutNumber("Potentiometer Angle", feederAngle);
 	
 }
 
-void Feeder::SetState(FEEDER_STATE state){
+void Feeder::SetState(FEEDER_STATE state)
+{
 	feederState = state;
 }
 
 void Feeder::ExecStep()
 {
-	//feederWheelMotorSpeed = 1.0;
+	float desiredVel = 0.0;
+	feederWheelMotorSpeed = 0.0;
 	feederAngleMotorSpeed = 0.0;
 	
-	CurrFeederArmSpeed = (feederAngle-PrevFeederArmAngle)/driverInput->GetPeriod();
+	float aveFeederAngle = 0;
+	for(int i =0; i<5; i++)
+	{
+		aveFeederAngle+=angles[i];
+	}
+	aveFeederAngle/=5;
+	
+	CurrFeederArmSpeed = (aveFeederAngle - PrevFeederArmAngle) / driverInput->GetPeriod();
+	
+	
 	switch (this->feederState)
 	{
-		case FEEDER_STATE_DOWN:
-			TargetFeederArmSpeed = 25;
-			//feederWheelMotorSpeed = 1.0;
-			/*
-			if (feederAngle > DOWN_FEEDER_ANGLE+2.5)
+	    default:
+		case FEEDER_STATE_INIT:
+			if (LeftButtonPressed)
 			{
-				feederAngleMotorSpeed = 0.2;
+				feederState = FEEDER_STATE_HOME;
+				profile.SetDist(HOME_FEEDER_ANGLE - feederAngle);
+				profile.CalcProfile();
+				pidControl.Reset();
+				timer->Reset();
+				timer->Start();
+			}			
+			else if (RightButtonPressed)
+			{
+				feederState = FEEDER_STATE_DOWN;
+				profile.SetDist(DOWN_FEEDER_ANGLE - feederAngle);
+				profile.CalcProfile();
+				pidControl.Reset();
+				timer->Reset();
+				timer->Start();			
+				feederWheelMotorSpeed = 1.0;			
 			}
-			else if(feederAngle < DOWN_FEEDER_ANGLE-2.5){
-				feederAngleMotorSpeed = -0.4;
+			break;
+		
+		case FEEDER_STATE_DOWN:
+
+			feederWheelMotorSpeed = 1.0;
+			
+			if (feederAngle > (DOWN_FEEDER_ANGLE + 5.0))
+			{
+				desiredVel = profile.GetDesiredVel(timer->Get());
+				//feederAngleMotorSpeed = pidControl.CalcMotorOutput(desiredVel, CurrFeederArmSpeed, timer->Get());
+				feederAngleMotorSpeed = 0.2;
 			}
 			else
 			{
 				feederAngleMotorSpeed = 0.0;
 			}
-			*/
-	
-			//ArmPID->SetSetpoint(2.3);//GetVoltageFromAngle(DOWN_FEEDER_ANGLE));
-			if(feederAngle < DOWN_FEEDER_ANGLE+10){
-				float error = CurrFeederArmSpeed-TargetFeederArmSpeed;
-				feederAngleMotorSpeed = feederAngleMotorSpeed-(K1*error);
-			}
-			else if(feederAngle < DOWN_FEEDER_ANGLE+5){
-				feederAngleMotorSpeed = 0.2;
-			}
-			else{
-				feederAngleMotorSpeed = 0;
-			}
-			
+						
 			if (LeftButtonPressed || RightButtonPressed)
 			{
 				feederState = FEEDER_STATE_HOME;
+				profile.SetDist(HOME_FEEDER_ANGLE - feederAngle);
+				profile.CalcProfile();
+				pidControl.Reset();
+				timer->Reset();
+				timer->Start();
 			}			
 			break;
 				
 	case FEEDER_STATE_HOME:
-	default:
-		TargetFeederArmSpeed = -25;
-		/*if (feederAngle >= HOME_FEEDER_ANGLE)
+
+		if (feederAngle >= (HOME_FEEDER_ANGLE - 5.0))
 		{
 			feederWheelMotorSpeed = 0.0;
-			//feederAngleMotorSpeed = 0.2;
+			feederAngleMotorSpeed = 0.0;
 		}
 		else
 		{
 			feederWheelMotorSpeed = 1.0;
-			//feederAngleMotorSpeed = 0.0;
-		}*/
-		
-		if(feederAngle < HOME_FEEDER_ANGLE-10){
-			float error = CurrFeederArmSpeed-TargetFeederArmSpeed;
-			feederAngleMotorSpeed = feederAngleMotorSpeed-(K1*error);
+			desiredVel = profile.GetDesiredVel(timer->Get());
+			//feederAngleMotorSpeed = pidControl.CalcMotorOutput(desiredVel, CurrFeederArmSpeed, timer->Get());
+			feederAngleMotorSpeed = -0.4;
 		}
-		else if(feederAngle < HOME_FEEDER_ANGLE-5){
-			feederAngleMotorSpeed = -0.2;
-		}
-		else{
-			feederAngleMotorSpeed = 0;
-		}
-				
-		//ArmPID->SetSetpoint(3.6);//GetVoltageFromAngle(HOME_FEEDER_ANGLE));
 		
 		if (LeftButtonPressed || RightButtonPressed || FireButtonPressed)
 		{
 			feederState = FEEDER_STATE_DOWN;
+			profile.SetDist(DOWN_FEEDER_ANGLE - feederAngle);
+			profile.CalcProfile();
+			pidControl.Reset();
+			timer->Reset();
+			timer->Start();			
+			feederWheelMotorSpeed = -1.0;	
 		}
 		
 		break;
 	}
-	/*
-	if(feederAngle <= 90){
-		feederWheelMotorSpeed = 1;
-	}
-	else{
-		feederWheelMotorSpeed = 0;
-	}
-	*/
-	if(driverInput->IsFeederLeftButtonPressed()){
-		if (feederWheelMotorSpeed == 0) {
-			feederWheelMotorSpeed = -1;
-		}
-		
-		else {
-			feederWheelMotorSpeed = 0;
-		}
-	}
 	
-	if(driverInput->IsFeederRightButtonPressed()){
-		if (feederWheelMotorSpeed == 0) {
-			feederWheelMotorSpeed = 1;
-		}
-		
-		else {
-			feederWheelMotorSpeed = 0;
-		}
-	}
+	PrevFeederArmAngle = aveFeederAngle;
 	
-	PrevFeederArmAngle = feederAngle;
-
-	return;
-	
+	SmartDashboard::PutNumber("feeder state", feederState);
+	SmartDashboard::PutNumber("Feeder Timer", timer->Get());
+	SmartDashboard::PutNumber("Feeder Motor Speed", feederAngleMotorSpeed);
+	SmartDashboard::PutNumber("Feeder Current Arm Speed", CurrFeederArmSpeed);
+	SmartDashboard::PutNumber("Feeder Desired Velocity", desiredVel);
+	//return;
 }
 
 float Feeder::GetAngle()
@@ -170,7 +178,7 @@ float Feeder::GetAngle()
 void Feeder::SetOutputs()
 {
 	feederWheel->Set(feederWheelMotorSpeed);//feederWheelMotorSpeed);
-	feederArm->Set(0);//feederAngleMotorSpeed);
+	feederArm->Set(feederAngleMotorSpeed);//feederAngleMotorSpeed);
 	return;
 }
 
