@@ -17,8 +17,7 @@ public:
 	bool IsLightButtonPressed();
 	Joystick* GetDriverJoystick();
 	float GetPeriod();
-	
-	
+	bool IsBackwardDirectionPressed();
 	
 private:	
 	bool FireCatapult;
@@ -32,6 +31,12 @@ private:
 	bool DebugArmButton;
 	bool LightButtonPressed;
 	bool PrevLightButtonPressed;
+	
+	bool SwitchDirection;
+	bool ForwardDirection;
+	bool BackwardDirection;
+	bool BackwardButton;
+	
 	float period;
 	
 	Joystick* driverStick;

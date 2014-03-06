@@ -1,3 +1,6 @@
+#ifndef DRIVE_H
+#define DRIVE_H
+
 #include "WPILib.h"
 #include "Controllers.h"
 
@@ -15,10 +18,10 @@ class Drive
 	void SetOutputs();
 	Victor* leftDrive;
 	Victor* rightDrive;
-	
+	RobotDrive* myRobot;
 	
   private:
-	RobotDrive* myRobot;
+	
 	float LeftDriveCommand, RightDriveCommand;
 	bool HighGear;
 	float LeftDriveMotorOutput, RightDriveMotorOutput;
@@ -28,4 +31,8 @@ class Drive
 	Controllers* driverInput;
 	Solenoid *rightSolenoid;
 	Solenoid *leftSolenoid;
+	
+	bool BackwardButton;
 };
+
+#endif

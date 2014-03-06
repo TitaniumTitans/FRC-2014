@@ -1,12 +1,13 @@
 #include "Controllers.h"
 
 #define FIRE_CATAPULT_BUTTON	1
-#define EJECT_BALL_BUTTON		2
+#define EJECT_BALL_BUTTON		6
 #define FEEDER_TOGGLE_BUTTON	3
 #define GEAR_SHIFT_DOWN_BUTTON	4
 #define GEAR_SHIFT_UP_BUTTON	5
 #define CAMERA_LIGHT_BUTTON		11
-#define DEBUG_ARM_BUTTON		8
+#define DEBUG_ARM_BUTTON		15
+#define SWITCH_DIRECTION_BUTTON 8
 
 
 Controllers::Controllers(float period, int driverStickNum, int helperStickNum)
@@ -64,6 +65,14 @@ void Controllers::GetInputs()
 		LightButtonPressed=false;
 	PrevLightButtonPressed = CurrentLightPressed;
 	
+	bool BackwardDirection = driverStick->GetRawButton(SWITCH_DIRECTION_BUTTON);
+	if (!ForwardDirection && BackwardDirection){
+		BackwardButton = true;
+	}
+	else {
+		BackwardButton = false;
+	}
+	ForwardDirection = BackwardDirection;
 }
 	
 bool Controllers::IsHighGearButtonPressed()
@@ -107,4 +116,9 @@ bool Controllers::IsLightButtonPressed()
 float Controllers::GetPeriod()
 {
 	return period;
+}
+
+bool Controllers::IsBackwardDirectionPressed()
+{
+	return BackwardButton;
 }

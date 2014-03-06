@@ -1,3 +1,6 @@
+#ifndef PIDCONTROL_H
+#define PIDCONTROL_H
+
 #include "WPILib.h"
 
 class PIDControl
@@ -21,3 +24,5 @@ class PIDControl
 	float PrevError;
 	float ErrorInt;
 };
+
+#endif

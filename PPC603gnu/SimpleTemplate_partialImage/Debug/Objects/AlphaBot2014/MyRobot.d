@@ -389,7 +389,8 @@ SimpleTemplate_partialImage/Debug/Objects/AlphaBot2014/MyRobot.o:  \
   C:/WindRiver/workspace/AlphaBot2014/PIDControl.h \
   C:/WindRiver/workspace/AlphaBot2014/Profile.h \
   C:/WindRiver/workspace/AlphaBot2014/Catapult.h \
-  C:/WindRiver/workspace/AlphaBot2014/Sensors.h
+  C:/WindRiver/workspace/AlphaBot2014/Sensors.h \
+  C:/WindRiver/workspace/AlphaBot2014/AutonomousMode.h
 
 C:/WindRiver/vxworks-6.3/target/h/WPILib/WPILib.h:
 
@@ -1170,3 +1171,5 @@ C:/WindRiver/workspace/AlphaBot2014/Profile.h:
 C:/WindRiver/workspace/AlphaBot2014/Catapult.h:
 
 C:/WindRiver/workspace/AlphaBot2014/Sensors.h:
+
+C:/WindRiver/workspace/AlphaBot2014/AutonomousMode.h:

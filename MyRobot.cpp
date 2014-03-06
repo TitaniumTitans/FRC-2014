@@ -4,7 +4,7 @@
 #include "Feeder.h"
 #include "Catapult.h"
 #include "Sensors.h"
-
+#include "AutonomousMode.h"
 
 /*MOTORS*/
 #define CATAPULT_WHEEL_PWM	2
@@ -22,10 +22,27 @@
 
 /*DIGITAL IO*/
 #define LIMIT_SWITCH		1
+#define LEFT_ENCODER_1		2
+#define LEFT_ENCODER_2		3
+#define RIGHT_ENCODER_1		4
+#define RIGHT_ENCODER_2		5
+#define TOP_ENCODER_1		6
+#define TOP_ENCODER_2		7
 
 /*SOLENOIDS*/
 #define LEFT_SOLENOID		2
 #define RIGHT_SOLENOID		4
+
+/*AUTONOMOUS*/
+#define STOP_DISTANCE_RANGE	24
+#define STOP_DISTANCE_ENCOD	60
+#define STOP_DRIVING_TIME	3
+
+#define AUTO_RANGEONLY		0
+#define AUTO_RANGEANDENCOD	1
+#define AUTO_ENCODONLY		2
+#define AUTO_TIMEONLY		3
+
 
 //Alpha bot 
 //#define LEFT_SOLENOID		2
@@ -36,6 +53,7 @@
 #define PERIOD_IN_SECONDS	0.01
 
 
+
 class Robot : public SimpleRobot
 {	
 	Feeder* feeder;
@@ -43,7 +61,8 @@ class Robot : public SimpleRobot
 	Catapult* catapult;
 	Drive* drive;
 	Timer* timer;
-	
+	Sensors* sensors;
+	AutonomousMode* autonomous;
 	
 public:
 	Robot()	
@@ -54,17 +73,28 @@ public:
 		feeder = new Feeder(driverInput, FEEDER_ARM_PWM, FEEDER_WHEEL_PWM, FEEDER_ANGLE_ANALOG);
 		drive = new Drive(driverInput, LEFT_MOTOR_PWM, RIGHT_MOTOR_PWM, LEFT_SOLENOID, RIGHT_SOLENOID);
 		catapult = new Catapult(driverInput, CATAPULT_WHEEL_PWM, LIMIT_SWITCH);
+		sensors = new Sensors(RANGE_FINDER_ANALOG, LEFT_ENCODER_1, LEFT_ENCODER_2, RIGHT_ENCODER_1, RIGHT_ENCODER_2, TOP_ENCODER_1, TOP_ENCODER_2);
+		autonomous = new AutonomousMode(AUTO_RANGEONLY, drive->myRobot, sensors, catapult, STOP_DISTANCE_RANGE, STOP_DISTANCE_ENCOD, STOP_DRIVING_TIME, CAMERA_LED);
 	}
 
 	
 	void Autonomous()
 	{
 		SmartDashboard::init();
-		//myRobot.SetSafetyEnabled(false);
-				
+		//myRobot->SetSafetyEnabled(false);
+		
+		AxisCamera &camera = AxisCamera::GetInstance();
+		
 		while(IsAutonomous() && IsEnabled())
 		{
+			autonomous->GetInputs(camera.GetImage());
+			
+			autonomous->ExecStep();
+			
+			autonomous->SetOutputs();
+			
 			//drive->ExecStep();
+			
 			
 			/*
 			DigitalInput *limitswitch = new DigitalInput(1);
@@ -75,7 +105,6 @@ public:
 
 	void OperatorControl()
 	{
-		SmartDashboard::init();
 		//myRobot.SetSafetyEnabled(true);
 		
 		//AnalogChannel* pot = new AnalogChannel(1);
@@ -121,7 +150,6 @@ public:
 	}
 
 	void Test() {
-		SmartDashboard::init();
 		Joystick* driverStick = driverInput->GetDriverJoystick();
 		//Relay* redLights = new Relay(1, Relay::kForward);
 		//Relay* blueLights = new Relay(2, Relay::kForward);
@@ -130,9 +158,9 @@ public:
 		
 		
 		Victor* motors [] = {feeder->feederWheel, feeder->feederArm, drive->leftDrive, drive->rightDrive, catapult->ChooChooMotor};	
-		int index = 0;
-		bool prevUp = false;
-		bool prevDown = false;
+		//int index = 0;
+		//bool prevUp = false;
+		//bool prevDown = false;
 		
 		
 		
@@ -173,9 +201,11 @@ public:
 		}
 		
 		*/
+		
+		Compressor *compress = new Compressor(1, 1);
 
 		while(IsTest() && IsEnabled()){
-			if (driverStick->GetRawButton(1)) {
+			if (driverStick->GetRawButton(2)) {
 				motors[0]->Set(1.0);
 			}
 			
@@ -183,15 +213,15 @@ public:
 				motors[0]->Set(0);
 			}
 			
-			if (driverStick->GetRawButton(2)) {
-				motors[1]->Set(0.2);
+			if (driverStick->GetRawButton(3)) {
+				motors[1]->Set(-0.2);
 			}
 			
 			else {
 				motors[1]->Set(0);
 			}
 			
-			if (driverStick->GetRawButton(3)) {
+			if (driverStick->GetRawButton(4)) {
 				motors[2]->Set(0.8);
 			}
 			
@@ -199,7 +229,7 @@ public:
 				motors[2]->Set(0);
 			}
 			
-			if (driverStick->GetRawButton(4)) {
+			if (driverStick->GetRawButton(5)) {
 				motors[3]->Set(0.8);
 			}
 			
@@ -207,8 +237,8 @@ public:
 				motors[3]->Set(0);
 			}
 			
-			if (driverStick->GetRawButton(4)) {
-				motors[4]->Set(0.8);
+			if (driverStick->GetRawButton(7) && driverStick->GetRawButton(1)) {
+				motors[4]->Set(0.6);
 			}
 			
 			else {
@@ -221,10 +251,14 @@ public:
 			else {
 				cameraLights->Set(cameraLights->kOff);
 			}
-		}
-		
-		
-		
+			
+			if(driverStick->GetRawButton(11)) {
+				compress->Start();
+			}
+			else {
+				compress->Stop();
+			}
+		}		
 	}
 
 };

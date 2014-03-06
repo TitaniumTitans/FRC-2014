@@ -13,6 +13,11 @@ Catapult::Catapult(Controllers* driverInput, int catapaultPWM, int limitSwitch)
 	timer->Reset();
 }
 
+void Catapult::SetState(CATAPULT_STATE state)
+{
+	catapultState = state;
+}
+
 void Catapult::SetSafeToFire(bool safeFire)
 {
 	SafeToFire = safeFire;

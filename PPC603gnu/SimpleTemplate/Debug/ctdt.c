@@ -13,13 +13,15 @@ void _GLOBAL__I__ZN10PIDControlC2Ev();
 
 void _GLOBAL__I__ZN11ControllersC2Efii();
 
+void _GLOBAL__I__ZN14AutonomousModeC2EiP10RobotDriveP7SensorsP8Catapultiiii();
+
 void _GLOBAL__I__ZN5DriveC2EP11Controllersiiii();
 
 void _GLOBAL__I__ZN6FeederC2EP11Controllersiii();
 
 void _GLOBAL__I__ZN7ProfileC2Ev();
 
-void _GLOBAL__I__ZN7SensorsC2EP11Controllersii();
+void _GLOBAL__I__ZN7SensorsC2Eiiiiiii();
 
 void _GLOBAL__I__ZN8CatapultC2EP11Controllersii();
 
@@ -81,10 +83,11 @@ void (*_ctors[])() =
     _GLOBAL__I__Z20FRC_userClassFactoryv,
     _GLOBAL__I__ZN10PIDControlC2Ev,
     _GLOBAL__I__ZN11ControllersC2Efii,
+    _GLOBAL__I__ZN14AutonomousModeC2EiP10RobotDriveP7SensorsP8Catapultiiii,
     _GLOBAL__I__ZN5DriveC2EP11Controllersiiii,
     _GLOBAL__I__ZN6FeederC2EP11Controllersiii,
     _GLOBAL__I__ZN7ProfileC2Ev,
-    _GLOBAL__I__ZN7SensorsC2EP11Controllersii,
+    _GLOBAL__I__ZN7SensorsC2Eiiiiiii,
     _GLOBAL__I__ZN8CatapultC2EP11Controllersii,
     _GLOBAL__I__ZN12PrintCommandC2EPKc,
     _GLOBAL__I__ZN9Scheduler9_instanceE,
@@ -121,13 +124,15 @@ void _GLOBAL__D__ZN10PIDControlC2Ev();
 
 void _GLOBAL__D__ZN11ControllersC2Efii();
 
+void _GLOBAL__D__ZN14AutonomousModeC2EiP10RobotDriveP7SensorsP8Catapultiiii();
+
 void _GLOBAL__D__ZN5DriveC2EP11Controllersiiii();
 
 void _GLOBAL__D__ZN6FeederC2EP11Controllersiii();
 
 void _GLOBAL__D__ZN7ProfileC2Ev();
 
-void _GLOBAL__D__ZN7SensorsC2EP11Controllersii();
+void _GLOBAL__D__ZN7SensorsC2Eiiiiiii();
 
 void _GLOBAL__D__ZN8CatapultC2EP11Controllersii();
 
@@ -179,10 +184,11 @@ void (*_dtors[])() =
     _GLOBAL__D__Z20FRC_userClassFactoryv,
     _GLOBAL__D__ZN10PIDControlC2Ev,
     _GLOBAL__D__ZN11ControllersC2Efii,
+    _GLOBAL__D__ZN14AutonomousModeC2EiP10RobotDriveP7SensorsP8Catapultiiii,
     _GLOBAL__D__ZN5DriveC2EP11Controllersiiii,
     _GLOBAL__D__ZN6FeederC2EP11Controllersiii,
     _GLOBAL__D__ZN7ProfileC2Ev,
-    _GLOBAL__D__ZN7SensorsC2EP11Controllersii,
+    _GLOBAL__D__ZN7SensorsC2Eiiiiiii,
     _GLOBAL__D__ZN8CatapultC2EP11Controllersii,
     _GLOBAL__D__ZN9Scheduler9_instanceE,
     _GLOBAL__D_wpi_error_s_ModuleIndexOutOfRange,

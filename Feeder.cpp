@@ -13,7 +13,7 @@ Feeder::Feeder(Controllers* driverInput, int feederArmInput, int feederWheelInpu
 	feederAngle = 0;
 	feederAngleMotorSpeed = 0.0;
 	feederWheelMotorSpeed = 0.0;
-	feederState = FEEDER_STATE_DOWN;
+	feederState = FEEDER_STATE_INIT;
 	feederAngleMotorSpeed = 0.0;
 	feederWheelMotorSpeed = 0.0;
 	LeftButtonPressed = false;
@@ -138,12 +138,24 @@ void Feeder::ExecStep()
 			feederWheelMotorSpeed = 0.0;
 			feederAngleMotorSpeed = 0.0;
 		}
+		else if (feederAngle >= (HOME_FEEDER_ANGLE - 10.0))
+		{
+			feederWheelMotorSpeed = 0.0;
+			desiredVel = profile.GetDesiredVel(timer->Get());
+			//feederAngleMotorSpeed = pidControl.CalcMotorOutput(desiredVel, CurrFeederArmSpeed, timer->Get());
+			feederAngleMotorSpeed = -0.4;
+		}
 		else
 		{
 			feederWheelMotorSpeed = 1.0;
 			desiredVel = profile.GetDesiredVel(timer->Get());
 			//feederAngleMotorSpeed = pidControl.CalcMotorOutput(desiredVel, CurrFeederArmSpeed, timer->Get());
 			feederAngleMotorSpeed = -0.4;
+		}
+
+		if (EjectButtonPressed)
+		{
+			feederWheelMotorSpeed = -1.0;	
 		}
 		
 		if (LeftButtonPressed || RightButtonPressed || FireButtonPressed)

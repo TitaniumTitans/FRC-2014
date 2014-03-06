@@ -1,3 +1,6 @@
+#ifndef SENSORS_H
+#define SENSORS_H
+
 #include "WPILib.h"
 #include "Controllers.h"
 #include <vector>
@@ -5,14 +8,18 @@
 class Sensors
 {
   public:
-	Sensors(Controllers* driverInput, int rangeAnalogIn, int lightRelayPort);
+	Sensors(int rangeAnalogIn, int left1, int left2, int right1, int right2, int top1, int top2);
 	void GetInputs();
 	float GetDistance();
+	float GetDistanceTraveled();
 	
   private:
-	Controllers* driverInput;
 	AnalogChannel* range;
-	float distance;
+	Encoder* leftEncoder;
+	Encoder* rightEncoder;
+	Encoder* topEncoder;
+	float distanceRange;
+	float distanceEncod;
 	float GetInch(float voltage);
 	int count;
 	//Relay light;
@@ -20,3 +27,5 @@ class Sensors
 	//AxisCamera &camera;
 	
 };
+
+#endif /* SENSORS_H */

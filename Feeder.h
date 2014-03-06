@@ -1,3 +1,6 @@
+#ifndef FEEDER_H
+#define FEEDER_H
+
 #include "WPILib.h"
 #include "Controllers.h"
 #include "PIDControl.h"
@@ -62,3 +65,5 @@ class Feeder
 	float angles[5];
 	int arrayIndex;
 };
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef PROFILE_H
+#define PROFILE_H
+
 #include "WPILib.h"
 
 class Profile
@@ -23,3 +26,5 @@ class Profile
 	bool DirForward;
 	
 };
+
+#endif

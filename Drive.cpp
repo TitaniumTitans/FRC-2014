@@ -33,6 +33,7 @@ void Drive::SetHighGear(){
 
 void Drive::GetInputs(){
 	HighGear = driverInput->IsHighGearButtonPressed();
+	BackwardButton = driverInput ->IsBackwardDirectionPressed();
 	//LeftDriveMotorOutput = driverInput->GetLeftDriveInput();
 	//RightDriveMotorOutput = driverInput->GetRightDriveInput();
 }
@@ -43,7 +44,7 @@ void Drive::ExecStep()
 	this->SetOutputs();
 }
 void Drive::SetOutputs(){
-	myRobot->ArcadeDrive(driverInput->GetDriverJoystick());//LeftDriveMotorOutput);
+	myRobot->ArcadeDrive(driverInput->GetDriverJoystick());
 	//myRobot->ArcadeDrive(LeftDriveMotorOutput, RightDriveMotorOutput);
 	Drive::SetHighGear();
 }
