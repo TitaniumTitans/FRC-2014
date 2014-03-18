@@ -12,6 +12,7 @@ class Drive
   public:
 	Drive(Controllers* driverInput, int leftMotor, int rightMotor, int leftSolenoidNum, int rightSolenoidNum);
 	void SetHighGear();
+	void SetHighGear(bool high);
 	void SetDriveCommand(float leftDriveCmd);
 	void GetInputs();
 	void ExecStep();

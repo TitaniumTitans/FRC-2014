@@ -2,6 +2,7 @@
 
 #define FIRE_CATAPULT_BUTTON	1
 #define EJECT_BALL_BUTTON		6
+#define EJECT_BALL_FRONT		7
 #define FEEDER_TOGGLE_BUTTON	3
 #define GEAR_SHIFT_DOWN_BUTTON	4
 #define GEAR_SHIFT_UP_BUTTON	5
@@ -34,6 +35,7 @@ void Controllers::GetInputs()
 	
 	FireCatapult = driverStick->GetRawButton(FIRE_CATAPULT_BUTTON);
 	EjectBall = driverStick->GetRawButton(EJECT_BALL_BUTTON);
+	EjectBallFront = driverStick->GetRawButton(EJECT_BALL_FRONT);
 	
 	bool CurrentHighGearToggleButton = driverStick->GetRawButton(GEAR_SHIFT_DOWN_BUTTON) || driverStick->GetRawButton(GEAR_SHIFT_UP_BUTTON);
 	if (! PrevHighGearButton && CurrentHighGearToggleButton)
@@ -87,6 +89,10 @@ bool Controllers::IsFireButtonPressed()
 bool Controllers::IsEjectButtonPressed()
 {
 	return EjectBall;
+}
+bool Controllers::IsEjectButtonFront()
+{
+	return EjectBallFront;
 }
 bool Controllers::IsFeederLeftButtonPressed()
 {

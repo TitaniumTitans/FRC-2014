@@ -31,6 +31,21 @@ void Drive::SetHighGear(){
 	}
 }
 
+void Drive::SetHighGear(bool high){
+	SmartDashboard::init();
+	if (high) {
+		leftSolenoid->Set(false);
+		rightSolenoid->Set(true);
+		SmartDashboard::PutString("Gear", "High Gear");
+	}
+	else {
+		leftSolenoid->Set(true);
+		rightSolenoid->Set(false);
+		SmartDashboard::PutString("Gear", "Low Gear");
+	}
+}
+
+
 void Drive::GetInputs(){
 	HighGear = driverInput->IsHighGearButtonPressed();
 	BackwardButton = driverInput ->IsBackwardDirectionPressed();

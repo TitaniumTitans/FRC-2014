@@ -3,7 +3,7 @@
 
 #include "WPILib.h"
 #include "Controllers.h"
-#include <vector>
+#include <algorithm>
 
 class Sensors
 {
@@ -12,18 +12,21 @@ class Sensors
 	void GetInputs();
 	float GetDistance();
 	float GetDistanceTraveled();
+	float GetInch(float voltage);
+	AnalogChannel* range;
 	
   private:
-	AnalogChannel* range;
+	
 	Encoder* leftEncoder;
 	Encoder* rightEncoder;
 	Encoder* topEncoder;
 	float distanceRange;
 	float distanceEncod;
-	float GetInch(float voltage);
 	int count;
 	//Relay light;
-	std::vector<float>* distances;
+	float distances [20];
+	int index;
+	int sampleSize;
 	//AxisCamera &camera;
 	
 };

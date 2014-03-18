@@ -29,7 +29,7 @@ class Feeder
 	//static const float FEEDER_STOP_OUT_ANGLE = 50.0;
 	//static const float FEEDER_STOP_IN_ANGLE = 95.0;
 	static const float DOWN_FEEDER_ANGLE = 42.0;
-	static const float HOLD_FEEDER_ANGLE = 130.0;
+	//static const float HOLD_FEEDER_ANGLE = 130.0;
 	Victor* feederArm;
 	Victor* feederWheel;
 	
@@ -54,6 +54,7 @@ class Feeder
 	bool LeftButtonPressed;
 	bool RightButtonPressed;
 	bool EjectButtonPressed;
+	bool EjectButtonFront;
 	bool FireButtonPressed;
 	
 	Timer* timer;

@@ -17,9 +17,10 @@ Sensors::Sensors(int rangeAnalogIn, int left1, int left2, int right1, int right2
 	
 	distanceRange = 0;
 	distanceEncod = 0;
-	
+	index = 0;
 	count=0;
-	distances = new vector<float>();
+	sampleSize = 20;
+	//distances = new vector<float>();
 }
 
 void Sensors::GetInputs()
@@ -27,26 +28,33 @@ void Sensors::GetInputs()
 	
 	distanceEncod = (leftEncoder->GetDistance() + rightEncoder->GetDistance()) / 2;
 	
-	distances->push_back(GetInch(range->GetVoltage()));
-	count++;
-	
-	std::sort(distances->begin(), distances->end());
-	
-	float ave = 0;
-	int cnt = 0;
-	for(int i = distances->size()/4; i < distances->size()*0.75; i++)
-	{
-		cnt++;
-		ave= ave + distances->at(i);
+	distances[index] = (GetInch(range->GetVoltage()));
+	this->count++;
+	this->index++;
+	//distanceRange = index;
+	if(count%sampleSize){
+		std::sort(distances, distances+sampleSize);
+			
+		float ave = 0;
+		int cnt = 0;
+		for(int i = sampleSize/4; i < sampleSize*0.75; i++)
+		{
+			cnt++;
+			ave= ave + distances[i];
+		}
+		ave/=cnt;
+		
+		distanceRange = ave;
 	}
-	ave/=cnt;
+	if(index>sampleSize-1)
+		index = 0;
 	
-	distanceRange = ave;
 	
+	/*
 	if(distances->size()>=20)
 	{
 		distances->erase(0);
-	}
+	}*/
 	
 }
 
@@ -57,6 +65,7 @@ float Sensors::GetDistanceTraveled()
 
 float Sensors::GetDistance()
 {
+	//distanceRange = 1.8978;
 	return distanceRange;
 }
 
@@ -65,3 +74,4 @@ float Sensors::GetInch(float voltage)
 		float scale = 5./512.;
 		return voltage/scale;
 }
+

@@ -1,6 +1,7 @@
 #include "AutonomousMode.h"
 
-AutonomousMode::AutonomousMode(int mode, RobotDrive* myRobot, Sensors* sensors, Catapult* catapult, int stopDistRange, int stopDistEncod, int stopTime, int lightPort){
+AutonomousMode::AutonomousMode(int mode, RobotDrive* myRobot, Sensors* sensors, Catapult* catapult, int stopDistRange, int stopDistEncod, int stopTime, int lightPort)
+{
 	this->mode = mode;
 	this->myRobot = myRobot;
 	this->sensors = sensors;
@@ -20,71 +21,103 @@ AutonomousMode::AutonomousMode(int mode, RobotDrive* myRobot, Sensors* sensors, 
 	timer->Start();
 }
 
-void AutonomousMode::GetInputs(ColorImage* cImage){
+void AutonomousMode::GetInputs(ColorImage* image)
+{
 	sensors->GetInputs();
 	
 	distanceTrav = sensors->GetDistanceTraveled();
 	distance = sensors->GetDistance();
-	ColorImage *image = cImage;
+	/*
 
 	BinaryImage *bimage2 = image->ThresholdRGB(0,50, 200, 255, 0, 255);
 	
-	delete &image;
+	//image->Write("/orig.png");
+	//image->Write("orig2.png");
+	image->Write("/orig.bmp");
+	//image->Write("orig2.bmp");
+	bimage2->Write("/thresh.bmp");
+	
+	//delete &image;
 	delete image;
 
-	if(bimage2->GetNumberParticles()>=2){
-		camShoot = true;
+	if (bimage2->GetNumberParticles()>=2)
+	{
+		SmartDashboard::PutBoolean("Hot Goal", true);
+		//camShoot = true;
 	}
+	else SmartDashboard::PutBoolean("Hot Goal", false);
 	
+	//delete &bimage2;
+	delete bimage2;
+	*/
 }
 
-void AutonomousMode::ExecStep(){
+void AutonomousMode::ExecStep()
+{
 
-	if(mode==0)		//Rangefinder
+	if (mode==0)		//Rangefinder
 	{
-		if(distance>stopDistRange){
-			motorOut=1;
+		if(distance>stopDistRange) 
+		{
+			motorOut = 1;
 		}
-		else{
-			motorOut=0;
-			if(camShoot) shoot = true;
+		else
+		{
+			motorOut = 0;
+			if (camShoot) 
+			{
+				shoot = true;
+			}
 		}
 	}
-	else if(mode==1)//Rangefinder and Encoder
+	else if (mode==1)//Rangefinder and Encoder
 	{
-		if(distance>stopDistRange && distanceTrav<stopDistEncod){
+		if (distance>stopDistRange && distanceTrav<stopDistEncod)
+		{
 			motorOut=1;
 		}
-		else{
+		else
+		{
 			motorOut=0;
-			if(camShoot) shoot = true;
+			if (camShoot)
+			{
+				shoot = true;
+			}
 		}
 	}
-	else if(mode==2)//Encoder
+	else if (mode==2)//Encoder
 	{
-		if(distanceTrav<stopDistEncod){
+		if (distanceTrav<stopDistEncod)
+		{
 			motorOut=1;
 		}
-		else{
-			motorOut=0;
-			if(camShoot) shoot = true;
+		else
+		{
+			motorOut = 0;
+			if (camShoot) 
+			{
+				shoot = true;
+			}
 		}
 	}
-	else if(mode==3)//Time
+	else if (mode==3)//Time
 	{
-		if(timer->Get()>stopTime){
+		if (timer->Get()>stopTime)
+		{
 			motorOut=1;
 		}
-		else{
+		else
+		{
 			motorOut=0;
-			if(camShoot) shoot = true;
+			{
+				if(camShoot) shoot = true;
+			}
 		}
 			
 	}
 	
-	
-	
-	if(timer->Get()>7){
+	if (timer->Get() > 7)
+	{
 		shoot = true;
 	}
 	
@@ -92,12 +125,12 @@ void AutonomousMode::ExecStep(){
 
 void AutonomousMode::SetOutputs(){
 	myRobot->TankDrive(motorOut, motorOut);
-	if(shoot)
+	if (shoot)
 	{
 		catapult->SetSafeToFire(true);
 		catapult->SetState(catapult->CATAPULT_STATE_FIRE);
 	}
 	catapult->ExecStep();
-	catapult->SetOutputs();
+	//catapult->SetOutputs();
 }
 

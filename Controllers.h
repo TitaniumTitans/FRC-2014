@@ -11,6 +11,7 @@ public:
 	bool IsHighGearButtonPressed();
 	bool IsFireButtonPressed();
 	bool IsEjectButtonPressed();
+	bool IsEjectButtonFront();
 	bool IsFeederLeftButtonPressed();
 	bool IsFeederRightButtonPressed();
 	bool IsDebugArmButtonPressed();
@@ -22,6 +23,7 @@ public:
 private:	
 	bool FireCatapult;
 	bool EjectBall;
+	bool EjectBallFront;
 	bool FeederLeftPressed;
 	bool PrevFeederLeftPressed;
 	bool FeederRightPressed;
