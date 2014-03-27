@@ -162,6 +162,14 @@ SimpleTemplate_partialImage/$(MODE_DIR)/% : LIBPATH =
 SimpleTemplate_partialImage/$(MODE_DIR)/% : LIBS = 
 SimpleTemplate_partialImage/$(MODE_DIR)/% : OBJ_DIR := SimpleTemplate_partialImage/$(MODE_DIR)
 
+SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/.metadata/.plugins/org.eclipse.cdt.make.core/specs.o : $(PRJ_ROOT_DIR)/.metadata/.plugins/org.eclipse.cdt.make.core/specs.c $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc $(DEBUGFLAGS_C-Compiler) $(CC_ARCH_SPEC) -ansi  -Wall  -MD -MP -mlongcall $(ADDED_CFLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -DCPU=$(CPU) -DTOOL_FAMILY=$(TOOL_FAMILY) -DTOOL=$(TOOL) -D_WRS_KERNEL   $(DEFINES) -o "$@" -c "$<"
+
+
+SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/.metadata/.plugins/org.eclipse.cdt.make.core/specs.o : $(PRJ_ROOT_DIR)/.metadata/.plugins/org.eclipse.cdt.make.core/specs.cpp $(FORCE_FILE_BUILD)
+	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -ansi -Wall  -MD -MP -mlongcall $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -DCPU=$(CPU) -DTOOL_FAMILY=$(TOOL_FAMILY) -DTOOL=$(TOOL) -D_WRS_KERNEL   $(DEFINES) -o "$@" -c "$<"
+
+
 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/AutonomousMode.o : $(PRJ_ROOT_DIR)/AutonomousMode.cpp $(FORCE_FILE_BUILD)
 	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -ansi -Wall  -MD -MP -mlongcall $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -DCPU=$(CPU) -DTOOL_FAMILY=$(TOOL_FAMILY) -DTOOL=$(TOOL) -D_WRS_KERNEL   $(DEFINES) -o "$@" -c "$<"
 
@@ -198,7 +206,9 @@ SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Sensors.o : $(PRJ_R
 	$(TRACE_FLAG)if [ ! -d "`dirname "$@"`" ]; then mkdir -p "`dirname "$@"`"; fi;echo "building $@"; $(TOOL_PATH)ccppc $(DEBUGFLAGS_C++-Compiler) $(CC_ARCH_SPEC) -ansi -Wall  -MD -MP -mlongcall $(ADDED_C++FLAGS) $(IDE_INCLUDES) $(ADDED_INCLUDES) -DCPU=$(CPU) -DTOOL_FAMILY=$(TOOL_FAMILY) -DTOOL=$(TOOL) -D_WRS_KERNEL   $(DEFINES) -o "$@" -c "$<"
 
 
-OBJECTS_SimpleTemplate_partialImage = SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/AutonomousMode.o \
+OBJECTS_SimpleTemplate_partialImage = SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/.metadata/.plugins/org.eclipse.cdt.make.core/specs.o \
+	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/.metadata/.plugins/org.eclipse.cdt.make.core/specs.o \
+	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/AutonomousMode.o \
 	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Catapult.o \
 	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Controllers.o \
 	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Drive.o \
@@ -220,9 +230,10 @@ SimpleTemplate_partialImage/$(MODE_DIR)/SimpleTemplate_partialImage_clean :
 
 force : 
 
-DEP_FILES := SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/AutonomousMode.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Catapult.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Controllers.d \
-	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Drive.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Feeder.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/MyRobot.d \
-	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/PIDControl.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Profile.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Sensors.d
+DEP_FILES := SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/.metadata/.plugins/org.eclipse.cdt.make.core/specs.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/.metadata/.plugins/org.eclipse.cdt.make.core/specs.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/AutonomousMode.d \
+	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Catapult.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Controllers.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Drive.d \
+	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Feeder.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/MyRobot.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/PIDControl.d \
+	 SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Profile.d SimpleTemplate_partialImage/$(MODE_DIR)/Objects/AlphaBot2014/Sensors.d
 -include $(DEP_FILES)
 
 

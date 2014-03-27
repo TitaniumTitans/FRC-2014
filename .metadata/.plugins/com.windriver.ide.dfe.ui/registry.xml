@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.6.0_21" class="java.beans.XMLDecoder"> 
+ <string>BreakpointsSkipAll</string> 
+ <boolean>false</boolean> 
+ <string>Platform</string> 
+ <string>Eclipse</string> 
+ <string>*** NODE ***</string> 
+ <string>Preferences</string> 
+ <string>BreakpointScope</string> 
+ <string>target</string> 
+ <string>*** END ***</string> 
+ <string>WorkspacePath</string> 
+ <string>C:\WindRiver\workspace\AlphaBot2014\.metadata\.plugins\com.windriver.ide.dfe.ui</string> 
+ <string>*** END ***</string> 
+</java> 

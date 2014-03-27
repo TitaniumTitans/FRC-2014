@@ -110,13 +110,13 @@ void Feeder::ExecStep()
 				pidControl.Reset();
 				timer->Reset();
 				timer->Start();			
-				feederWheelMotorSpeed = 1.0;			
+				feederWheelMotorSpeed = 0.65;			
 			}
 			break;
 		
 		case FEEDER_STATE_DOWN:
 
-			feederWheelMotorSpeed = 1.0;
+			feederWheelMotorSpeed = 0.65;
 			
 			if (feederAngle > (DOWN_FEEDER_ANGLE + 5.0))
 			{
@@ -142,12 +142,12 @@ void Feeder::ExecStep()
 				
 	case FEEDER_STATE_HOME:
 
-		if (feederAngle >= (HOME_FEEDER_ANGLE - 5.0))
+		if (feederAngle >= (HOME_FEEDER_ANGLE - 15.0))
 		{
 			feederWheelMotorSpeed = 0.0;
 			feederAngleMotorSpeed = 0.0;
 		}
-		else if (feederAngle >= (HOME_FEEDER_ANGLE - 10.0))
+		else if (feederAngle >= (HOME_FEEDER_ANGLE - 20.0))
 		{
 			feederWheelMotorSpeed = 0.0;
 			desiredVel = profile.GetDesiredVel(timer->Get());
@@ -156,20 +156,25 @@ void Feeder::ExecStep()
 		}
 		else
 		{
-			feederWheelMotorSpeed = 1.0;
+			//feederWheelMotorSpeed = 0.55;
 			desiredVel = profile.GetDesiredVel(timer->Get());
 			//feederAngleMotorSpeed = pidControl.CalcMotorOutput(desiredVel, CurrFeederArmSpeed, timer->Get());
-			feederAngleMotorSpeed = -0.6;
+			feederAngleMotorSpeed = -0.5;
 		}
 
+		if (feederAngle < 70){
+			feederWheelMotorSpeed = 0.65;
+		}
+		
 		if (EjectButtonPressed)
 		{
-			feederWheelMotorSpeed = -1.0;	
+			feederWheelMotorSpeed = -0.55;	
 		}
 		
 		if (EjectButtonFront)
 		{
-			feederWheelMotorSpeed = 1.0;
+			feederWheelMotorSpeed=0.0;
+			//feederWheelMotorSpeed = 0.55;
 		}
 		
 		if (LeftButtonPressed || RightButtonPressed || FireButtonPressed)
@@ -202,6 +207,7 @@ void Feeder::ExecStep()
 void Feeder::SetOutputs()
 {
 	feederWheel->Set(feederWheelMotorSpeed);//feederWheelMotorSpeed);
+	//feederWheel->Set(0.55);
 	feederArm->Set(feederAngleMotorSpeed);//feederAngleMotorSpeed);
 	return;
 }
@@ -230,7 +236,8 @@ float Feeder::GetAngleFromVoltage(float voltage)
 	//float scale = 5.0/250.0;
 	//return voltage/scale;
 	//return 46.80187207*voltage-77.5975039;
-	return 45.22590787*voltage+7.543095126;
+	//return 45.22590787*voltage+7.543095126;
+	return 1176.280248*voltage-128.4281092;
 }
 
 //

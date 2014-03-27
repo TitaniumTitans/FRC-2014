@@ -11,8 +11,8 @@
 class AutonomousMode
 {
 	public:
-		AutonomousMode(int mode, RobotDrive* myRobot, Sensors* sensors, Catapult* catapult, int stopDistRange, int stopDistEncod, int stopTime, int lightPort);
-		void GetInputs(ColorImage* cImage);
+		AutonomousMode(int mode, RobotDrive* myRobot, Sensors* sensors, Catapult* catapult, int stopDistRange, int stopDistEncod, float stopTime, int lightPort);
+		void GetInputs();//ColorImage* cImage);
 		void ExecStep();
 		void SetOutputs();
 	
@@ -24,14 +24,14 @@ class AutonomousMode
 		Timer* timer;
 		float distance;
 		float distanceTrav;
-		int stopTime;
+		float stopTime;
 		int stopDistEncod;
 		int stopDistRange;
 		bool shoot;
 		bool camShoot;
 		float motorOut;
 		int mode;
-	
+		bool firedAlready;
 };
 
 #endif /* AUTONOMOUSMODE_H */

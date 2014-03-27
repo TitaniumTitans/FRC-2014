@@ -25,8 +25,13 @@ Sensors::Sensors(int rangeAnalogIn, int left1, int left2, int right1, int right2
 
 void Sensors::GetInputs()
 {
+	float leftDist = leftEncoder->GetDistance();
+	float rightDist=rightEncoder->GetDistance();
 	
-	distanceEncod = (leftEncoder->GetDistance() + rightEncoder->GetDistance()) / 2;
+	SmartDashboard::PutNumber("Left Encoder" , leftDist);
+	SmartDashboard::PutNumber("Right Encoder",rightDist);
+	
+	distanceEncod = (leftDist + rightDist) / 2;
 	
 	distances[index] = (GetInch(range->GetVoltage()));
 	this->count++;

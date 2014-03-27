@@ -1,0 +1,24 @@
+!SESSION 2014-03-22 12:54:57.332 -----------------------------------------------
+eclipse.buildId=M20110311-1130/WB20110622-1135
+java.version=1.6.0_21
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Command-line arguments:  -data C:\WindRiver\workspace\AlphaBot2014 -os win32 -ws win32 -arch x86
+
+!ENTRY com.windriver.ide 1 0 2014-03-22 12:55:07.034
+!MESSAGE Workbench start-up time: 9.73s, Main window shown after: 9.72s.
+
+!ENTRY com.windriver.ide.common.core 4 0 2014-03-22 12:55:07.189
+!MESSAGE [workbench-3.0] C:\WindRiver\wrenv.exe: conflicting preferred packages workbench-3.3 and workbench-3.0
+
+!ENTRY com.windriver.ide.common.core 1 0 2014-03-22 12:55:08.585
+!MESSAGE Workbench license obtained in 0.04s, vendor information: <ln>78202</ln><flt>1</flt><ps>1851-1</ps>
+
+!ENTRY com.windriver.ide.target 1 0 2014-03-22 12:55:08.621
+!MESSAGE C:\WindRiver\workbench-3.3\dfw\\x86-win32\bin\dfwserver.exe  -protocol mi -io sockets -useregistry -session dfw-wb331-TAngert -registryhost 127.0.0.1
+
+!ENTRY com.windriver.ide.target 1 0 2014-03-22 12:55:08.904
+!MESSAGE Connected to Wind River debug server backend at 127.0.0.1, 127.0.0.1:59304, PID=6916, Session="dfw-wb331-TAngert"
+
+!ENTRY com.windriver.ide.target 1 0 2014-03-22 12:55:09.177
+!MESSAGE Wind River Debug Server API Version '2.12.0' (build name 'DFW_BUILD_3_3_1_21 - 06/23/2011 12:29:11')

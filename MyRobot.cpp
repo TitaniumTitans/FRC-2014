@@ -14,18 +14,20 @@
 #define FEEDER_WHEEL_PWM	8 // or 0
 
 /*SPIKES*/
-#define CAMERA_LED			4 //also B
+#define CAMERA_LED			5 //also B
+#define RED_LED				4 //Working
+#define BLUE_LED			2 //Not Working
 
 /*ANALOG INPUTS*/
 #define RANGE_FINDER_ANALOG	2
-#define FEEDER_ANGLE_ANALOG	3
+#define FEEDER_ANGLE_ANALOG	1
 
 /*DIGITAL IO*/
-#define LIMIT_SWITCH		1
-#define LEFT_ENCODER_1		2
-#define LEFT_ENCODER_2		3
-#define RIGHT_ENCODER_1		4
-#define RIGHT_ENCODER_2		5
+#define LIMIT_SWITCH		2//1
+#define LEFT_ENCODER_1		4
+#define LEFT_ENCODER_2		5
+#define RIGHT_ENCODER_1		7
+#define RIGHT_ENCODER_2		8
 #define TOP_ENCODER_1		6
 #define TOP_ENCODER_2		7
 
@@ -36,13 +38,15 @@
 /*AUTONOMOUS*/
 #define STOP_DISTANCE_RANGE	24
 #define STOP_DISTANCE_ENCOD	60
-#define STOP_DRIVING_TIME	0.5
+#define STOP_DRIVING_TIME	1
 
 #define AUTO_RANGEONLY		0
 #define AUTO_RANGEANDENCOD	1
 #define AUTO_ENCODONLY		2
 #define AUTO_TIMEONLY		3
 
+#define COMPRESSOR_RELAY	2
+#define COMPRESSOR_SWITCH	1
 
 //Alpha bot 
 //#define LEFT_SOLENOID		2
@@ -76,7 +80,7 @@ class Robot : public SimpleRobot
 		driverInput = new Controllers(PERIOD_IN_SECONDS, 1, 2);
 		feeder = new Feeder(driverInput, FEEDER_ARM_PWM, FEEDER_WHEEL_PWM, FEEDER_ANGLE_ANALOG);
 		drive = new Drive(driverInput, LEFT_MOTOR_PWM, RIGHT_MOTOR_PWM, LEFT_SOLENOID, RIGHT_SOLENOID);
-		catapult = new Catapult(driverInput, CATAPULT_WHEEL_PWM, LIMIT_SWITCH);
+		catapult = new Catapult(driverInput, feeder, CATAPULT_WHEEL_PWM, LIMIT_SWITCH, RED_LED, BLUE_LED);
 		sensors = new Sensors(RANGE_FINDER_ANALOG, LEFT_ENCODER_1, LEFT_ENCODER_2, RIGHT_ENCODER_1, RIGHT_ENCODER_2, TOP_ENCODER_1, TOP_ENCODER_2);
 		
 	}
@@ -94,7 +98,7 @@ class Robot : public SimpleRobot
 		
 		//myRobot->SetSafetyEnabled(false);
 		
-		AxisCamera &camera = AxisCamera::GetInstance();
+		//AxisCamera &camera = AxisCamera::GetInstance();
 		
 		
 		while(IsAutonomous() && IsEnabled())
@@ -102,20 +106,20 @@ class Robot : public SimpleRobot
 			feeder->GetInputs();
 			sensors->GetInputs();
 			
-			ColorImage *image;
-			image = camera.GetImage();
+			//ColorImage *image;
+			//image = camera.GetImage();
 		
 
-			SmartDashboard::PutNumber("Range Finder Distance", sensors->GetInch(sensors->range->GetVoltage()));
-			SmartDashboard::PutNumber("Range Finder Average Distance", sensors->GetDistance());
-			autonomous->GetInputs(image);
+			//SmartDashboard::PutNumber("Range Finder Distance", sensors->GetInch(sensors->range->GetVoltage()));
+			//SmartDashboard::PutNumber("Range Finder Average Distance", sensors->GetDistance());
+			autonomous->GetInputs();
 			
-			//autonomous->ExecStep();
+			autonomous->ExecStep();
 			
-			//autonomous->SetOutputs();
+			autonomous->SetOutputs();
 			
 			//delete &image;
-			delete image;
+			//delete image;
 			
 			Wait(0.01);
 			/*
@@ -149,7 +153,7 @@ class Robot : public SimpleRobot
 			//
 			// Pass values between components as necessary
 			//
-			catapult->SetSafeToFire(feeder->GetAngle()<95); 
+			//catapult->SetSafeToFire(feeder->GetAngle()<95); 
 			
 			//
 			// Execute one step on each component
@@ -168,8 +172,7 @@ class Robot : public SimpleRobot
 			// Wait for step timer to expire.  This allows us to control the amount of time each step takes. Afterwards, restart the 
 			// timer for the next loop
 			//
-			while (timer->Get()<(PERIOD_IN_SECONDS))
-				;
+			while (timer->Get()<(PERIOD_IN_SECONDS));
 			timer->Reset();
 
 		}
@@ -190,8 +193,26 @@ class Robot : public SimpleRobot
 		bool prevShiftButttonPressed = false;
 		
 		Victor* motors [] = {feeder->feederWheel, feeder->feederArm, drive->leftDrive, drive->rightDrive, catapult->ChooChooMotor};		
-		Relay* compressorspike = new Relay(1);
-		Relay* cameraLights = new Relay(4);
+		
+		Relay* compressor = new Relay(COMPRESSOR_RELAY);
+		DigitalInput* compressorLimitSwitch = new DigitalInput(COMPRESSOR_SWITCH);
+		//Compressor* compressor = new Compressor(1,1);//COMPRESSOR_SWITCH, COMPRESSOR_RELAY);
+		//compressor->Start();
+		Relay* cameraLights = new Relay(CAMERA_LED);
+		//Solenoid* right = new Solenoid(6);
+		//Solenoid* left = new Solenoid(5);
+		
+		//right->Set(true);
+		//left->Set(true);
+		
+		Relay* redlights = catapult->redled;
+		//Relay* whitelights = catapult->whiteled;
+		
+		//redlights->Set(redlights->kForward);
+		//whitelights->Set(whitelights->kForward);
+		//cameraLights->Set(cameraLights->kForward);
+		
+		bool compressorOn = false;
 
 		while (IsTest() && IsEnabled())
 		{
@@ -204,7 +225,7 @@ class Robot : public SimpleRobot
 			/*FEEDER WHEEL*/
 			if (driverStick->GetRawButton(2)) 
 			{
-				motors[0]->Set(1.0);
+				motors[0]->Set(0.4);
 			}
 			
 			else 
@@ -215,7 +236,7 @@ class Robot : public SimpleRobot
 			/*FEEDER ARM*/
 			if (driverStick->GetRawButton(3)) 
 			{
-				motors[1]->Set(-0.2);
+				motors[1]->Set(0.6);
 			}
 			
 			else 
@@ -245,6 +266,16 @@ class Robot : public SimpleRobot
 				motors[3]->Set(0);
 			}
 			
+			if (driverStick->GetRawButton(6)) 
+			{
+				redlights->Set(redlights->kForward);
+			}
+			
+			else 
+			{
+				redlights->Set(redlights->kOff);
+			}
+			
 			/*CHOOCHOO MOTOR*/
 			if (driverStick->GetRawButton(7) && driverStick->GetRawButton(1)) 
 			{
@@ -257,6 +288,7 @@ class Robot : public SimpleRobot
 			}
 			
 			/*CAMERA LED*/
+			
 			if (driverStick->GetRawButton(8)) 
 			{
 				cameraLights->Set(cameraLights->kForward);
@@ -266,7 +298,6 @@ class Robot : public SimpleRobot
 				cameraLights->Set(cameraLights->kOff);
 			}
 			
-			/*GEAR SHIFT*/
 			/*
 			if (curShiftButtonPressed && !prevShiftButttonPressed) 
 			{
@@ -276,19 +307,47 @@ class Robot : public SimpleRobot
 			
 			if (driverStick->GetRawButton(10))
 			{
-				drive->SetHighGear(!gear);
-				//gear != gear;
+				drive->SetHighGear(true);//!gear
+				
+				gear = !gear;
+			}
+			else{
+				drive->SetHighGear(false);
 			}
 			
 			/*COMPRESSOR*/
 			if(driverStick->GetRawButton(11)) 
 			{
-				compressorspike->Set(compressorspike->kOn);
+				compressorOn = true;
+				//compressor->Set(compressor->kOn);
+				//compressor->Start();
 			}
 			else 
 			{
-				compressorspike->Set(compressorspike->kOff);
+				//compressor->Stop();
 			}
+			if(driverStick->GetRawButton(9))
+			{
+				compressorOn = false;
+				//compressor->Set(compressor->kOff);
+				//compressor->Stop();
+			}
+			
+			if(compressorOn){
+				if(!compressorLimitSwitch->Get()){
+					compressor->Set(compressor->kOn);
+				}
+				else{
+					compressor->Set(compressor->kOff);
+					compressorOn = false;
+				}
+					
+					
+			}
+			else
+				compressor->Set(compressor->kOff);
+			
+			
 			prevShiftButttonPressed = curShiftButtonPressed;
 		}		
 	}

@@ -8,8 +8,8 @@ Drive::Drive(Controllers* driverInput, int leftMotor, int rightMotor, int leftSo
 	myRobot = new RobotDrive(leftDrive, rightDrive);
 	myRobot->SetExpiration(0.1);
 	myRobot->SetSafetyEnabled(false);
-	this->leftSolenoid = new Solenoid(leftSolenoidNum);	
-	this->rightSolenoid = new Solenoid(rightSolenoidNum);
+	this->leftSolenoid = new Solenoid(2);//leftSolenoidNum);	
+	this->rightSolenoid = new Solenoid(4);//rightSolenoidNum);
 }
 
 void Drive::SetDriveCommand(float leftDriveCmd){

@@ -1,6 +1,16 @@
 #include "AutonomousMode.h"
 
-AutonomousMode::AutonomousMode(int mode, RobotDrive* myRobot, Sensors* sensors, Catapult* catapult, int stopDistRange, int stopDistEncod, int stopTime, int lightPort)
+#define TIME_FORWARD	1
+#define TIME_SHOOT		2
+#define TIME_PICKUPBALL	1
+#define TIME_WAIT		1
+#define TIME_BACKWARD	1
+#define TIME_FORWARD2	1.2
+
+#define TWO_BALL_AUTO	true
+
+
+AutonomousMode::AutonomousMode(int mode, RobotDrive* myRobot, Sensors* sensors, Catapult* catapult, int stopDistRange, int stopDistEncod, float stopTime, int lightPort)
 {
 	this->mode = mode;
 	this->myRobot = myRobot;
@@ -19,16 +29,21 @@ AutonomousMode::AutonomousMode(int mode, RobotDrive* myRobot, Sensors* sensors, 
 	this->camShoot = false;
 	light->Set(light->kForward);
 	timer->Start();
+	catapult->GetFeeder()->HOME_FEEDER_ANGLE;
+	firedAlready = false;
 }
 
-void AutonomousMode::GetInputs(ColorImage* image)
+void AutonomousMode::GetInputs()//ColorImage* image)
 {
 	sensors->GetInputs();
 	
 	distanceTrav = sensors->GetDistanceTraveled();
 	distance = sensors->GetDistance();
+	
+	
+	//SmartDashboard::PutNumber("Encoder Dist Traveled");
+	
 	/*
-
 	BinaryImage *bimage2 = image->ThresholdRGB(0,50, 200, 255, 0, 255);
 	
 	//image->Write("/orig.png");
@@ -50,11 +65,12 @@ void AutonomousMode::GetInputs(ColorImage* image)
 	//delete &bimage2;
 	delete bimage2;
 	*/
+	//delete image;
 }
 
 void AutonomousMode::ExecStep()
 {
-
+/*
 	if (mode==0)		//Rangefinder
 	{
 		if(distance>stopDistRange) 
@@ -102,7 +118,7 @@ void AutonomousMode::ExecStep()
 	}
 	else if (mode==3)//Time
 	{
-		if (timer->Get()>stopTime)
+		if (timer->Get()<stopTime)
 		{
 			motorOut=1;
 		}
@@ -115,22 +131,76 @@ void AutonomousMode::ExecStep()
 		}
 			
 	}
+	*/
 	
-	if (timer->Get() > 7)
-	{
-		shoot = true;
+	
+	if(TWO_BALL_AUTO){
+		//going forward first time
+		if (timer->Get() < TIME_FORWARD)//stopTime+0.25)
+		{
+			motorOut=1;
+		}
+		//time to shoot
+		else if(timer->Get() < TIME_FORWARD + TIME_SHOOT)
+		{
+			shoot = true;
+		}
+		//time going backwards
+		else if(timer->Get() < TIME_FORWARD + TIME_SHOOT + TIME_BACKWARD)
+		{
+			shoot=false;
+			firedAlready=false;
+			motorOut=-1;
+			//catapult->GetFeeder()->SetState(catapult->GetFeeder()->HOME_FEEDER_ANGLE);
+		}
+		//time picking up the second ball
+		else if(timer->Get() < TIME_FORWARD + TIME_SHOOT + TIME_BACKWARD + TIME_PICKUPBALL)
+		{
+			motorOut=-0.1;
+			
+		}
+		//time driving forward with the second ball
+		else if(timer->Get() < TIME_FORWARD + TIME_SHOOT + TIME_BACKWARD + TIME_PICKUPBALL + TIME_FORWARD2)
+		{
+			motorOut=1;
+			catapult->GetFeeder()->SetState(catapult->GetFeeder()->FEEDER_STATE_HOME);
+		}
+		//Time waiting
+		else if(timer->Get() > TIME_FORWARD + TIME_SHOOT + TIME_BACKWARD + TIME_PICKUPBALL + TIME_FORWARD2 + TIME_WAIT)
+		{
+			shoot=true;
+		}
 	}
+	else{
+		if (timer->Get()<stopTime)
+		{
+			motorOut=1;
+		}
+		else{
+			shoot=true;
+		}
+	}
+	
+	
 	
 }
 
 void AutonomousMode::SetOutputs(){
-	myRobot->TankDrive(motorOut, motorOut);
-	if (shoot)
+	myRobot->TankDrive(-motorOut, -motorOut);
+	
+	catapult->GetFeeder()->GetInputs();
+	catapult->GetFeeder()->ExecStep();
+	catapult->GetFeeder()->SetOutputs();
+	
+	
+	if (shoot&&!firedAlready)
 	{
-		catapult->SetSafeToFire(true);
+		//catapult->SetSafeToFire();
 		catapult->SetState(catapult->CATAPULT_STATE_FIRE);
+		firedAlready = true;
 	}
+	catapult->GetInputs();
 	catapult->ExecStep();
-	//catapult->SetOutputs();
+	catapult->SetOutputs();
 }
 

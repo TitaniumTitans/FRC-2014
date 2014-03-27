@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.rse.ui.wizards.newconnection.RSEMainNewConnectionWizard">
+		<item value="com.windriver.ide.target.tsconn.linux.usermode" key="lastSelectedSystemTypeId"/>
+		<section name="org.eclipse.rse.ui.wizards.newconnection.RSENewConnectionWizardSelectionPage">
+			<list key="filteredTree.expandedCatogryIds">
+				<item value="com.windriver.ide.target.ui.rse.category.linux"/>
+				<item value="com.windriver.ide.target.ui.rse.category.vxworks6"/>
+				<item value="com.windriver.ide.target.ui.rse.category.ocd"/>
+			</list>
+		</section>
+	</section>
+</section>
