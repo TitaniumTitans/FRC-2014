@@ -82,7 +82,6 @@ class Robot : public SimpleRobot
 		drive = new Drive(driverInput, LEFT_MOTOR_PWM, RIGHT_MOTOR_PWM, LEFT_SOLENOID, RIGHT_SOLENOID);
 		catapult = new Catapult(driverInput, feeder, CATAPULT_WHEEL_PWM, LIMIT_SWITCH, RED_LED, BLUE_LED);
 		sensors = new Sensors(RANGE_FINDER_ANALOG, LEFT_ENCODER_1, LEFT_ENCODER_2, RIGHT_ENCODER_1, RIGHT_ENCODER_2, TOP_ENCODER_1, TOP_ENCODER_2);
-		
 	}
 
 	//
@@ -100,9 +99,22 @@ class Robot : public SimpleRobot
 		
 		//AxisCamera &camera = AxisCamera::GetInstance();
 		
-		
+		//Relay* redddlight = new Relay(4);
+		//Timer* lighttimer = new Timer();
+		//lighttimer->Start();
 		while(IsAutonomous() && IsEnabled())
 		{
+			/*
+			if (lighttimer->Get()<=0.25) {
+				redddlight->Set(redddlight->kForward);
+			}
+			else if(lighttimer->Get()<0.5){
+				redddlight->Set(redddlight->kOff);
+			}
+			else {
+				lighttimer->Reset();
+			}
+			*/
 			feeder->GetInputs();
 			sensors->GetInputs();
 			
@@ -138,10 +150,23 @@ class Robot : public SimpleRobot
 		//myRobot.SetSafetyEnabled(true);
 		
 		timer->Start();
-		
+		Relay* reddlight = new Relay(4);
+		//Timer* lighttimer = new Timer();
+		//lighttimer->Start();
 		while (IsOperatorControl() && IsEnabled())
 		{
-			
+			reddlight->Set(reddlight->kForward);
+			/*
+			if (lighttimer->Get()<=0.5) {
+				reddlight->Set(reddlight->kForward);
+			}
+			else if(lighttimer->Get()<1){
+				reddlight->Set(reddlight->kOff);
+			}
+			else {
+				lighttimer->Reset();
+			}
+			*/
 			//
 			// Get inputs
 			//
@@ -205,7 +230,7 @@ class Robot : public SimpleRobot
 		//right->Set(true);
 		//left->Set(true);
 		
-		Relay* redlights = catapult->redled;
+		//Relay* redlights = catapult->redled;
 		//Relay* whitelights = catapult->whiteled;
 		
 		//redlights->Set(redlights->kForward);
@@ -236,7 +261,7 @@ class Robot : public SimpleRobot
 			/*FEEDER ARM*/
 			if (driverStick->GetRawButton(3)) 
 			{
-				motors[1]->Set(0.6);
+				motors[1]->Set(-0.6);
 			}
 			
 			else 
@@ -265,7 +290,7 @@ class Robot : public SimpleRobot
 			{
 				motors[3]->Set(0);
 			}
-			
+			/*
 			if (driverStick->GetRawButton(6)) 
 			{
 				redlights->Set(redlights->kForward);
@@ -275,7 +300,7 @@ class Robot : public SimpleRobot
 			{
 				redlights->Set(redlights->kOff);
 			}
-			
+			*/
 			/*CHOOCHOO MOTOR*/
 			if (driverStick->GetRawButton(7) && driverStick->GetRawButton(1)) 
 			{

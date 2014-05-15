@@ -1,13 +1,13 @@
 #include "AutonomousMode.h"
 
-#define TIME_FORWARD	1
+#define TIME_FORWARD	1.1
+#define TIME_WAIT_SHOOT	0.25
 #define TIME_SHOOT		2
-#define TIME_PICKUPBALL	1
+#define TIME_PICKUPBALL	2.2
 #define TIME_WAIT		1
-#define TIME_BACKWARD	1
-#define TIME_FORWARD2	1.2
-
-#define TWO_BALL_AUTO	true
+#define TIME_BACKWARD	1.1
+#define TIME_FORWARD2	1.6
+#define TWO_BALL_AUTO	false
 
 
 AutonomousMode::AutonomousMode(int mode, RobotDrive* myRobot, Sensors* sensors, Catapult* catapult, int stopDistRange, int stopDistEncod, float stopTime, int lightPort)
@@ -140,43 +140,62 @@ void AutonomousMode::ExecStep()
 		{
 			motorOut=1;
 		}
-		//time to shoot
-		else if(timer->Get() < TIME_FORWARD + TIME_SHOOT)
+		//Wait before shoot
+		else if(timer->Get() < TIME_FORWARD + TIME_WAIT_SHOOT)
 		{
+			motorOut=0;
+		}
+		//time to shoot
+		else if(timer->Get() < TIME_FORWARD + TIME_WAIT_SHOOT + TIME_SHOOT)
+		{
+			//motorOut=0;
 			shoot = true;
 		}
 		//time going backwards
-		else if(timer->Get() < TIME_FORWARD + TIME_SHOOT + TIME_BACKWARD)
+		else if(timer->Get() < TIME_FORWARD + TIME_WAIT_SHOOT + TIME_SHOOT + TIME_BACKWARD)
 		{
 			shoot=false;
 			firedAlready=false;
-			motorOut=-1;
-			//catapult->GetFeeder()->SetState(catapult->GetFeeder()->HOME_FEEDER_ANGLE);
+			motorOut=-1;//-1
+			catapult->GetFeeder()->SetState(catapult->GetFeeder()->FEEDER_STATE_DOWN);
+		}
+		//Wait
+		else if(timer->Get() < TIME_FORWARD + TIME_WAIT_SHOOT + TIME_SHOOT + TIME_BACKWARD + 0.8)
+		{
+			motorOut=0;
 		}
 		//time picking up the second ball
-		else if(timer->Get() < TIME_FORWARD + TIME_SHOOT + TIME_BACKWARD + TIME_PICKUPBALL)
+		else if(timer->Get() < TIME_FORWARD + TIME_WAIT_SHOOT + TIME_SHOOT + TIME_BACKWARD + TIME_PICKUPBALL)
 		{
-			motorOut=-0.1;
-			
+			motorOut=-0.3;
+		}
+		else if(timer->Get() < TIME_FORWARD + TIME_WAIT_SHOOT + TIME_SHOOT + TIME_BACKWARD + TIME_PICKUPBALL + 1)
+		{
+			motorOut=0;
 		}
 		//time driving forward with the second ball
-		else if(timer->Get() < TIME_FORWARD + TIME_SHOOT + TIME_BACKWARD + TIME_PICKUPBALL + TIME_FORWARD2)
+		else if(timer->Get() < TIME_FORWARD + TIME_WAIT_SHOOT + TIME_SHOOT + TIME_BACKWARD + TIME_PICKUPBALL + TIME_FORWARD2)
 		{
-			motorOut=1;
+			motorOut=1;//1
 			catapult->GetFeeder()->SetState(catapult->GetFeeder()->FEEDER_STATE_HOME);
 		}
 		//Time waiting
-		else if(timer->Get() > TIME_FORWARD + TIME_SHOOT + TIME_BACKWARD + TIME_PICKUPBALL + TIME_FORWARD2 + TIME_WAIT)
+		else if(timer->Get() > TIME_FORWARD + TIME_WAIT_SHOOT + TIME_SHOOT + TIME_BACKWARD + TIME_PICKUPBALL + TIME_FORWARD2 + TIME_WAIT + 0.1)
 		{
+			motorOut=0;
 			shoot=true;
 		}
 	}
 	else{
-		if (timer->Get()<stopTime)
+		if (timer->Get()< TIME_FORWARD)
 		{
 			motorOut=1;
 		}
+		else if (timer->Get() < TIME_FORWARD + 0.5){
+			motorOut = 0;
+		}
 		else{
+			//motorOut = 0;
 			shoot=true;
 		}
 	}

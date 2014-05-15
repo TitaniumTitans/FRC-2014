@@ -142,12 +142,12 @@ void Feeder::ExecStep()
 				
 	case FEEDER_STATE_HOME:
 
-		if (feederAngle >= (HOME_FEEDER_ANGLE - 15.0))
+		if (feederAngle >= (HOME_FEEDER_ANGLE + 5))
 		{
 			feederWheelMotorSpeed = 0.0;
 			feederAngleMotorSpeed = 0.0;
 		}
-		else if (feederAngle >= (HOME_FEEDER_ANGLE - 20.0))
+		else if (feederAngle >= (HOME_FEEDER_ANGLE - 10.0))
 		{
 			feederWheelMotorSpeed = 0.0;
 			desiredVel = profile.GetDesiredVel(timer->Get());
@@ -169,12 +169,20 @@ void Feeder::ExecStep()
 		if (EjectButtonPressed)
 		{
 			feederWheelMotorSpeed = -0.55;	
+			if (feederAngle <= (HOME_FEEDER_ANGLE))
+			{
+				feederAngleMotorSpeed = -0.3;
+			}
 		}
 		
 		if (EjectButtonFront)
 		{
 			feederWheelMotorSpeed=0.0;
 			//feederWheelMotorSpeed = 0.55;
+			if (feederAngle <= (HOME_FEEDER_ANGLE))
+			{
+				feederAngleMotorSpeed = -0.3;
+			}
 		}
 		
 		if (LeftButtonPressed || RightButtonPressed || FireButtonPressed)
@@ -237,7 +245,8 @@ float Feeder::GetAngleFromVoltage(float voltage)
 	//return voltage/scale;
 	//return 46.80187207*voltage-77.5975039;
 	//return 45.22590787*voltage+7.543095126;
-	return 1176.280248*voltage-128.4281092;
+	return 1176.280248*voltage-112.4281092;
+	//return 1176.280248*voltage-85.4281092;
 }
 
 //

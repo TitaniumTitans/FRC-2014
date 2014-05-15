@@ -23,8 +23,6 @@ class Catapult
 	void SetState(CATAPULT_STATE state);
 	Feeder* GetFeeder();
 	Victor* ChooChooMotor;
-	Relay* redled;
-	Relay* whiteled;
 	
   private:
 	bool CommandToFire;

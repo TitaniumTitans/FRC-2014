@@ -13,10 +13,10 @@ Catapult::Catapult(Controllers* driverInput, Feeder* feeder, int catapaultPWM, i
 	timer->Reset();
 	CatapultArmed = false;
 	SmartDashboard::PutNumber("Catapaut State Constructor", catapultState);
-	redled = new Relay(red);
-	whiteled = new Relay(blue);
-	lighttimer = new Timer();
-	lighttimer->Start();
+	//redled = new Relay(red);
+	//whiteled = new Relay(blue);
+	//lighttimer = new Timer();
+	//lighttimer->Start();
 	this->feeder = feeder;
 }
 
@@ -48,6 +48,7 @@ void Catapult::ExecStep(void)
 	switch (catapultState)
 	{
 		case CATAPULT_STATE_ARM:
+			/*
 			if (lighttimer->Get()<0.25) {
 				redled->Set(redled->kOn);
 				whiteled->Set(whiteled->kOff);
@@ -59,7 +60,7 @@ void Catapult::ExecStep(void)
 			else {
 				lighttimer->Reset();
 			}
-			
+			*/
 			SmartDashboard::PutString("Arm State", "Arm");
 			if (CatapultArmed)
 			{
@@ -73,8 +74,8 @@ void Catapult::ExecStep(void)
 			break;
 			
 		case CATAPULT_STATE_ARMED:
-			redled->Set(redled->kOff);
-			whiteled->Set(whiteled->kOff);
+			//redled->Set(redled->kOff);
+			//whiteled->Set(whiteled->kOff);
 			SmartDashboard::PutString("Arm State", "Armed");
 			ChooChooMotorSpeed = 0.0;
 			if (CommandToFire)
@@ -102,6 +103,7 @@ void Catapult::ExecStep(void)
 			break;
 			
 		case CATAPULT_STATE_FIRING:
+			/*
 			if (lighttimer->Get()<0.25) {
 				redled->Set(redled->kOn);
 				whiteled->Set(whiteled->kOff);
@@ -113,7 +115,7 @@ void Catapult::ExecStep(void)
 			else {
 				lighttimer->Reset();
 			}
-			
+			*/
 			SmartDashboard::PutString("Arm State", "Firing");
 			if (timer->Get() >= MIN_FIRING_TIME_IN_SECONDS)
 			{
