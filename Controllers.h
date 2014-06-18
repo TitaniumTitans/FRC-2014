@@ -19,9 +19,11 @@ public:
 	Joystick* GetDriverJoystick();
 	float GetPeriod();
 	bool IsBackwardDirectionPressed();
+	bool IsFireSafetyButtonPressed();
 	
 private:	
 	bool FireCatapult;
+	bool SafetyFireCatapult;
 	bool EjectBall;
 	bool EjectBallFront;
 	bool FeederLeftPressed;

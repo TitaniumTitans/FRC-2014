@@ -33,6 +33,7 @@ void Catapult::SetSafeToFire(bool safeFire)
 void Catapult::GetInputs()
 {
 	CommandToFire = driverInput->IsFireButtonPressed();
+	SafeCommandToFire = driverInput->IsFireSafetyButtonPressed();
 	//CatapultArmed = (!LeftLimitSwitch->Get() || !RightLimitSwitch->Get() || driverInput->IsDebugArmButtonPressed());
 	CatapultArmed = (!LimitSwitch->Get());// || driverInput->IsDebugArmButtonPressed());
 	SmartDashboard::PutBoolean("Catapult Button", LimitSwitch->Get());
@@ -78,7 +79,7 @@ void Catapult::ExecStep(void)
 			//whiteled->Set(whiteled->kOff);
 			SmartDashboard::PutString("Arm State", "Armed");
 			ChooChooMotorSpeed = 0.0;
-			if (CommandToFire)
+			if (CommandToFire && SafeCommandToFire)
 			{
 				catapultState = CATAPULT_STATE_FIRE;
 			}

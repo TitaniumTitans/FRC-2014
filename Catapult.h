@@ -26,6 +26,7 @@ class Catapult
 	
   private:
 	bool CommandToFire;
+	bool SafeCommandToFire;
 	bool SafeToFire;
 	int FireTickCount;
 	float ChooChooMotorSpeed;

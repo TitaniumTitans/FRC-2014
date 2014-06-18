@@ -1,6 +1,7 @@
 #include "Controllers.h"
 
 #define FIRE_CATAPULT_BUTTON	1
+#define SAFE_CATAPULT_BUTTON	9
 #define EJECT_BALL_BUTTON		6
 #define EJECT_BALL_FRONT		7
 #define FEEDER_TOGGLE_BUTTON	3
@@ -34,6 +35,7 @@ void Controllers::GetInputs()
 
 	
 	FireCatapult = driverStick->GetRawButton(FIRE_CATAPULT_BUTTON);
+	SafetyFireCatapult = driverStick->GetRawButton(SAFE_CATAPULT_BUTTON);
 	EjectBall = driverStick->GetRawButton(EJECT_BALL_BUTTON);
 	EjectBallFront = driverStick->GetRawButton(EJECT_BALL_FRONT);
 	
@@ -86,6 +88,12 @@ bool Controllers::IsFireButtonPressed()
 {
 	return FireCatapult;
 }
+
+bool Controllers::IsFireSafetyButtonPressed()
+{
+	return SafetyFireCatapult;
+}
+
 bool Controllers::IsEjectButtonPressed()
 {
 	return EjectBall;
