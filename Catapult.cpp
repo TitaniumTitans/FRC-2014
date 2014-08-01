@@ -79,7 +79,8 @@ void Catapult::ExecStep(void)
 			//whiteled->Set(whiteled->kOff);
 			SmartDashboard::PutString("Arm State", "Armed");
 			ChooChooMotorSpeed = 0.0;
-			if (CommandToFire && SafeCommandToFire)
+			//if (CommandToFire && SafeCommandToFire)
+            if (CommandToFire)
 			{
 				catapultState = CATAPULT_STATE_FIRE;
 			}
